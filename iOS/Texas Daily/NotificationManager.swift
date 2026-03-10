@@ -62,7 +62,7 @@ final class NotificationManager {
             .removePendingNotificationRequests(withIdentifiers: ["dailyTexasFact"])
     }
 
-    func scheduleDailyFactNotification(at time: DateComponents, fact: TexasFact?) async {
+    func scheduleDailyFactNotification(at time: DateComponents) async {
         let center = UNUserNotificationCenter.current()
 
         guard await ensureAuthorization() else {
@@ -72,13 +72,9 @@ final class NotificationManager {
         // Clear old requests for a single “daily” notification
         center.removePendingNotificationRequests(withIdentifiers: ["dailyTexasFact"])
 
-        guard let fact = fact else {
-            return
-        }
-
         let content = UNMutableNotificationContent()
         content.title = "Texas Daily Fact"
-        content.body = fact.fact
+        content.body = "Tap to read today's Texas fact."
         content.sound = .default
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: time, repeats: true)

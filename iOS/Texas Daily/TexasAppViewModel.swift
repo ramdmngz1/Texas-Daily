@@ -134,11 +134,7 @@ final class TexasAppViewModel: ObservableObject {
         }
 
         let comps = Calendar.current.dateComponents([.hour, .minute], from: notificationTime)
-
-        // Use the currently displayed fact, or grab one
-        let factToSend = todayFact ?? FactStore.shared.randomFact(from: selectedCategories)
-
-        await center.scheduleDailyFactNotification(at: comps, fact: factToSend)
+        await center.scheduleDailyFactNotification(at: comps)
     }
 
     // MARK: - StoreKit (Remove Ads)

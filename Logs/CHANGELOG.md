@@ -2,6 +2,37 @@
 
 ---
 
+## 2026-03-10
+
+### Compliance + Ad Serving
+
+**`TexasDailyApp.swift`**
+- Confirmed launch flow now binds ad readiness to UMP result: `adsSDKReady = await requestConsentAndStartAds()`.
+- Ads SDK only starts when `ConsentInformation.shared.canRequestAds == true`.
+
+**`SettingsView.swift`**
+- Added in-app **Privacy Choices** entry point for regions where privacy options are required.
+- Added `presentPrivacyChoices()` flow using `ConsentForm.presentPrivacyOptionsForm(...)`.
+- After privacy form dismissal, app now re-syncs ad eligibility (`adsSDKReady`) and starts AdMob if consent allows.
+
+### Bug Fixes
+
+**`Texas Daily.xcodeproj/project.pbxproj`**
+- Aligned deployment targets for project and test targets to `16.6` (removed `26.1` mismatch that could cause test/runtime inconsistencies).
+
+**`NotificationManager.swift` + `TexasAppViewModel.swift`**
+- Changed repeating daily reminder content to a neutral prompt (`"Tap to read today's Texas fact."`) to avoid stale repeated fact text.
+- Scheduling now no longer depends on a specific in-memory fact payload.
+
+### Performance
+
+**`TodayFactView.swift`**
+- Reworked share generation to lazy-render on tap (`prepareShareSheet()`) instead of rendering on every fact change/on-appear.
+- Added cached share state per fact id and invalidation on fact changes (`resetSharePayload(...)`).
+- Added temporary loading state for share preparation.
+
+---
+
 ## 2026-03-09
 
 ### Bug Fixes

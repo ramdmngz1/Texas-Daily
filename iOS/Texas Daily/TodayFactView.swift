@@ -18,6 +18,8 @@ struct TodayFactView: View {
     @State private var shareImage: UIImage? = nil
     @State private var shareText: String = ""
     @State private var showingShareSheet = false
+    @State private var isPreparingShare = false
+    @State private var shareFactID: Int? = nil
 
     // MARK: - Palette (shared with rest of app)
 
@@ -106,20 +108,48 @@ struct TodayFactView: View {
                 ActivityView(items: [image, shareText])
             }
         }
-        .onAppear { renderShareImage() }
-        .onChange(of: viewModel.todayFact?.id) { _ in renderShareImage() }
+        .onAppear { resetSharePayload(for: viewModel.todayFact) }
+        .onChange(of: viewModel.todayFact?.id) { _ in
+            resetSharePayload(for: viewModel.todayFact)
+        }
     }
 
     @MainActor
-    private func renderShareImage() {
+    private func prepareShareSheet() async {
         guard let fact = viewModel.todayFact else {
+            showingShareSheet = false
+            shareFactID = nil
             shareImage = nil
             shareText = "Shared from Texas Daily"
             return
         }
-        let renderer = ImageRenderer(content: FactShareCard(fact: fact))
-        renderer.scale = 3.0
-        shareImage = renderer.uiImage
+
+        shareText = makeShareText(from: fact)
+
+        if shareFactID != fact.id || shareImage == nil {
+            isPreparingShare = true
+            defer { isPreparingShare = false }
+
+            let renderer = ImageRenderer(content: FactShareCard(fact: fact))
+            renderer.scale = 3.0
+            shareImage = renderer.uiImage
+            shareFactID = fact.id
+        }
+
+        if shareImage != nil {
+            showingShareSheet = true
+        }
+    }
+
+    private func resetSharePayload(for fact: TexasFact?) {
+        shareFactID = nil
+        shareImage = nil
+
+        guard let fact else {
+            shareText = "Shared from Texas Daily"
+            return
+        }
+
         shareText = makeShareText(from: fact)
     }
 
@@ -140,18 +170,32 @@ struct TodayFactView: View {
 
             Button {
                 Haptics.light()
-                showingShareSheet = true
+                Task { await prepareShareSheet() }
             } label: {
-                Image(systemName: "square.and.arrow.up")
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundColor(shareImage != nil ? accentGreen : accentGreen.opacity(0.3))
-                    .padding(4)
-                    .frame(minWidth: 44, minHeight: 44)
+                Group {
+                    if isPreparingShare {
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                            .tint(accentGreen)
+                    } else {
+                        Image(systemName: "square.and.arrow.up")
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundColor(viewModel.todayFact != nil ? accentGreen : accentGreen.opacity(0.3))
+                    }
+                }
+                .padding(4)
+                .frame(minWidth: 44, minHeight: 44)
             }
             .buttonStyle(.plain)
-            .disabled(shareImage == nil)
+            .disabled(viewModel.todayFact == nil || isPreparingShare)
             .accessibilityLabel("Share fact")
-            .accessibilityHint(shareImage == nil ? "Available once the fact finishes loading" : "Shares the current Texas fact")
+            .accessibilityHint(
+                isPreparingShare
+                ? "Preparing share image"
+                : (viewModel.todayFact == nil
+                   ? "Available once the fact finishes loading"
+                   : "Shares the current Texas fact")
+            )
 
             Button {
                 Haptics.light()
