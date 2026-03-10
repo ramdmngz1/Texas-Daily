@@ -22,8 +22,7 @@ struct TexasDailyApp: App {
                     (ThemeMode(rawValue: themeModeRaw) ?? .light) == .dark ? .dark : .light
                 )
                 .task {
-                    await requestConsentAndStartAds()
-                    viewModel.adsSDKReady = true
+                    viewModel.adsSDKReady = await requestConsentAndStartAds()
                     viewModel.startStoreKitListener()
                     await viewModel.scheduleDailyReminderIfEnabled()
                 }
@@ -34,7 +33,8 @@ struct TexasDailyApp: App {
 
     /// Gathers GDPR/CCPA consent via Google UMP, then starts the Mobile Ads SDK
     /// only when consent permits it. Safe to call on every launch.
-    private func requestConsentAndStartAds() async {
+    /// - Returns: True when ad requests are allowed for this session.
+    private func requestConsentAndStartAds() async -> Bool {
         let parameters = RequestParameters()
 
         // Step 1: Fetch updated consent status from Google's servers.
@@ -52,7 +52,7 @@ struct TexasDailyApp: App {
             // Consent info update failed; fall through and check canRequestAds below.
         }
 
-        // Step 2: Present the consent form if one is required (EEA, UK, California, etc.).
+        // Step 2: Present the consent form if one is required.
         if let rootVC = rootViewController {
             do {
                 try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
@@ -70,9 +70,11 @@ struct TexasDailyApp: App {
         }
 
         // Step 3: Start ads only when consent has been obtained (or is not required).
-        if ConsentInformation.shared.canRequestAds {
+        let canRequestAds = ConsentInformation.shared.canRequestAds
+        if canRequestAds {
             await MobileAds.shared.start()
         }
+        return canRequestAds
     }
 
     private var rootViewController: UIViewController? {

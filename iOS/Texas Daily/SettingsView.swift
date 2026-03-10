@@ -16,6 +16,9 @@
 //
 
 import SwiftUI
+import UserMessagingPlatform
+import GoogleMobileAds
+import UIKit
 
 struct SettingsView: View {
     @EnvironmentObject var viewModel: TexasAppViewModel
@@ -32,6 +35,8 @@ struct SettingsView: View {
     // Optional: simple loading states for buttons (no dependency on viewModel internals)
     @State private var isAttemptingPurchase = false
     @State private var isAttemptingRestore = false
+    @State private var isPresentingPrivacyChoices = false
+    @State private var privacyStatusMessage: String? = nil
 
     // MARK: - Theme helpers
 
@@ -66,6 +71,10 @@ struct SettingsView: View {
 
     private var accentGreen: Color {
         Color(red: 0.52, green: 0.65, blue: 0.23)
+    }
+
+    private var privacyOptionsRequired: Bool {
+        ConsentInformation.shared.privacyOptionsRequirementStatus == .required
     }
 
     // MARK: - Body
@@ -387,12 +396,55 @@ struct SettingsView: View {
                 .font(.system(size: 12))
                 .foregroundColor(inkColor.opacity(0.6))
 
+            if privacyOptionsRequired {
+                Button {
+                    presentPrivacyChoices()
+                } label: {
+                    HStack(spacing: 10) {
+                        if isPresentingPrivacyChoices {
+                            ProgressView().tint(accentGreen)
+                        } else {
+                            Image(systemName: "hand.raised.fill")
+                                .foregroundColor(accentGreen)
+                        }
+
+                        Text("Privacy Choices")
+                            .font(.system(size: 15, weight: .semibold))
+                            .foregroundColor(inkColor)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .fill(cardColor.opacity(effectiveColorScheme == .dark ? 0.75 : 1.0))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .stroke(inkColor.opacity(effectiveColorScheme == .dark ? 0.18 : 0.10), lineWidth: 1)
+                    )
+                }
+                .buttonStyle(.plain)
+                .disabled(isPresentingPrivacyChoices)
+
+                Text("Manage your ad privacy choices for your region.")
+                    .font(.system(size: 12))
+                    .foregroundColor(inkColor.opacity(0.6))
+            }
+
             if let message = viewModel.purchaseStatusMessage {
                 Text(message)
                     .font(.system(size: 13, weight: .medium))
                     .foregroundColor(message.contains("error") || message.contains("not found")
                                      ? .red.opacity(0.85)
                                      : inkColor.opacity(0.7))
+                    .padding(.top, 2)
+                    .transition(.opacity)
+            }
+
+            if let privacyStatusMessage {
+                Text(privacyStatusMessage)
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundColor(.red.opacity(0.85))
                     .padding(.top, 2)
                     .transition(.opacity)
             }
@@ -404,6 +456,7 @@ struct SettingsView: View {
         )
         .shadow(color: Color.black.opacity(0.06), radius: 14, x: 0, y: 8)
         .animation(.easeInOut(duration: 0.2), value: viewModel.purchaseStatusMessage)
+        .animation(.easeInOut(duration: 0.2), value: privacyStatusMessage)
     }
 
     // MARK: - About
@@ -435,5 +488,34 @@ struct SettingsView: View {
     private func formattedTime(_ date: Date) -> String {
         Self.timeFormatter.string(from: date)
     }
-    
+
+    private func presentPrivacyChoices() {
+        Haptics.light()
+        isPresentingPrivacyChoices = true
+        privacyStatusMessage = nil
+
+        ConsentForm.presentPrivacyOptionsForm(from: rootViewController) { error in
+            Task { @MainActor in
+                isPresentingPrivacyChoices = false
+
+                if let error {
+                    privacyStatusMessage = "Privacy choices unavailable: \(error.localizedDescription)"
+                }
+
+                let canRequestAds = ConsentInformation.shared.canRequestAds
+                if canRequestAds {
+                    await MobileAds.shared.start()
+                }
+                viewModel.adsSDKReady = canRequestAds
+            }
+        }
+    }
+
+    private var rootViewController: UIViewController? {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first(where: { $0.isKeyWindow })?
+            .rootViewController
+    }
 }
