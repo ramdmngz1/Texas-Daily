@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:www.copanostudios.com)",
+      "Bash(find:*)",
+      "Bash(cd:*)",
+      "Bash(gh auth:*)",
+      "Bash(cd \"/Users/ramondominguez/Documents/Tech & Software/GitHub/Copano-Studios-Web\" && git remote set-url origin git@github.com:ramdmngz1/Copano-Studios-Web.git && git push origin main 2>&1)"
+    ]
+  }
+}

@@ -1,0 +1,636 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DA26C67F2EE31560009E5E83 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = DA26C67E2EE31560009E5E83 /* GoogleMobileAds */; };
+		DA26C6F02EEA3E33009E5E83 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA26C6EF2EEA3E33009E5E83 /* StoreKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DA26C5B32EDFA545009E5E83 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA26C59D2EDFA544009E5E83 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA26C5A42EDFA544009E5E83;
+			remoteInfo = "Texas Daily";
+		};
+		DA26C5BD2EDFA545009E5E83 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA26C59D2EDFA544009E5E83 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA26C5A42EDFA544009E5E83;
+			remoteInfo = "Texas Daily";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		DA26C5A52EDFA544009E5E83 /* Texas Daily.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Texas Daily.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA26C5B22EDFA545009E5E83 /* Texas DailyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Texas DailyTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA26C5BC2EDFA545009E5E83 /* Texas DailyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Texas DailyUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA26C6EF2EEA3E33009E5E83 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		DA26C5A72EDFA544009E5E83 /* Texas Daily */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Texas Daily";
+			sourceTree = "<group>";
+		};
+		DA26C5B52EDFA545009E5E83 /* Texas DailyTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Texas DailyTests";
+			sourceTree = "<group>";
+		};
+		DA26C5BF2EDFA545009E5E83 /* Texas DailyUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Texas DailyUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DA26C5A22EDFA544009E5E83 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DA26C67F2EE31560009E5E83 /* GoogleMobileAds in Frameworks */,
+				DA26C6F02EEA3E33009E5E83 /* StoreKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA26C5AF2EDFA545009E5E83 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA26C5B92EDFA545009E5E83 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DA26C59C2EDFA544009E5E83 = {
+			isa = PBXGroup;
+			children = (
+				DA26C5A72EDFA544009E5E83 /* Texas Daily */,
+				DA26C5B52EDFA545009E5E83 /* Texas DailyTests */,
+				DA26C5BF2EDFA545009E5E83 /* Texas DailyUITests */,
+				DA26C6EE2EEA3E33009E5E83 /* Frameworks */,
+				DA26C5A62EDFA544009E5E83 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DA26C5A62EDFA544009E5E83 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DA26C5A52EDFA544009E5E83 /* Texas Daily.app */,
+				DA26C5B22EDFA545009E5E83 /* Texas DailyTests.xctest */,
+				DA26C5BC2EDFA545009E5E83 /* Texas DailyUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DA26C6EE2EEA3E33009E5E83 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DA26C6EF2EEA3E33009E5E83 /* StoreKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DA26C5A42EDFA544009E5E83 /* Texas Daily */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DA26C5C62EDFA545009E5E83 /* Build configuration list for PBXNativeTarget "Texas Daily" */;
+			buildPhases = (
+				DA26C5A12EDFA544009E5E83 /* Sources */,
+				DA26C5A22EDFA544009E5E83 /* Frameworks */,
+				DA26C5A32EDFA544009E5E83 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				DA26C5A72EDFA544009E5E83 /* Texas Daily */,
+			);
+			name = "Texas Daily";
+			packageProductDependencies = (
+				DA26C67E2EE31560009E5E83 /* GoogleMobileAds */,
+			);
+			productName = "Texas Daily";
+			productReference = DA26C5A52EDFA544009E5E83 /* Texas Daily.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DA26C5B12EDFA545009E5E83 /* Texas DailyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DA26C5C92EDFA545009E5E83 /* Build configuration list for PBXNativeTarget "Texas DailyTests" */;
+			buildPhases = (
+				DA26C5AE2EDFA545009E5E83 /* Sources */,
+				DA26C5AF2EDFA545009E5E83 /* Frameworks */,
+				DA26C5B02EDFA545009E5E83 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DA26C5B42EDFA545009E5E83 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				DA26C5B52EDFA545009E5E83 /* Texas DailyTests */,
+			);
+			name = "Texas DailyTests";
+			packageProductDependencies = (
+			);
+			productName = "Texas DailyTests";
+			productReference = DA26C5B22EDFA545009E5E83 /* Texas DailyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		DA26C5BB2EDFA545009E5E83 /* Texas DailyUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DA26C5CC2EDFA545009E5E83 /* Build configuration list for PBXNativeTarget "Texas DailyUITests" */;
+			buildPhases = (
+				DA26C5B82EDFA545009E5E83 /* Sources */,
+				DA26C5B92EDFA545009E5E83 /* Frameworks */,
+				DA26C5BA2EDFA545009E5E83 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DA26C5BE2EDFA545009E5E83 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				DA26C5BF2EDFA545009E5E83 /* Texas DailyUITests */,
+			);
+			name = "Texas DailyUITests";
+			packageProductDependencies = (
+			);
+			productName = "Texas DailyUITests";
+			productReference = DA26C5BC2EDFA545009E5E83 /* Texas DailyUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DA26C59D2EDFA544009E5E83 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2610;
+				LastUpgradeCheck = 2620;
+				TargetAttributes = {
+					DA26C5A42EDFA544009E5E83 = {
+						CreatedOnToolsVersion = 26.1.1;
+					};
+					DA26C5B12EDFA545009E5E83 = {
+						CreatedOnToolsVersion = 26.1.1;
+						TestTargetID = DA26C5A42EDFA544009E5E83;
+					};
+					DA26C5BB2EDFA545009E5E83 = {
+						CreatedOnToolsVersion = 26.1.1;
+						TestTargetID = DA26C5A42EDFA544009E5E83;
+					};
+				};
+			};
+			buildConfigurationList = DA26C5A02EDFA544009E5E83 /* Build configuration list for PBXProject "Texas Daily" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DA26C59C2EDFA544009E5E83;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				DA26C67D2EE31506009E5E83 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = DA26C5A62EDFA544009E5E83 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DA26C5A42EDFA544009E5E83 /* Texas Daily */,
+				DA26C5B12EDFA545009E5E83 /* Texas DailyTests */,
+				DA26C5BB2EDFA545009E5E83 /* Texas DailyUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DA26C5A32EDFA544009E5E83 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA26C5B02EDFA545009E5E83 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA26C5BA2EDFA545009E5E83 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DA26C5A12EDFA544009E5E83 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA26C5AE2EDFA545009E5E83 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA26C5B82EDFA545009E5E83 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DA26C5B42EDFA545009E5E83 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA26C5A42EDFA544009E5E83 /* Texas Daily */;
+			targetProxy = DA26C5B32EDFA545009E5E83 /* PBXContainerItemProxy */;
+		};
+		DA26C5BE2EDFA545009E5E83 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA26C5A42EDFA544009E5E83 /* Texas Daily */;
+			targetProxy = DA26C5BD2EDFA545009E5E83 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		DA26C5C42EDFA545009E5E83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 495M5GQ94R;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		DA26C5C52EDFA545009E5E83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 495M5GQ94R;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		DA26C5C72EDFA545009E5E83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 495M5GQ94R;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Texas-Daily-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Texas Daily";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.refuge.texasdaily;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DA26C5C82EDFA545009E5E83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 495M5GQ94R;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Texas-Daily-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Texas Daily";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.refuge.texasdaily;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		DA26C5CA2EDFA545009E5E83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 495M5GQ94R;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Refuge.Texas-DailyTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Texas Daily.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Texas Daily";
+			};
+			name = Debug;
+		};
+		DA26C5CB2EDFA545009E5E83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 495M5GQ94R;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Refuge.Texas-DailyTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Texas Daily.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Texas Daily";
+			};
+			name = Release;
+		};
+		DA26C5CD2EDFA545009E5E83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 495M5GQ94R;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Refuge.Texas-DailyUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Texas Daily";
+			};
+			name = Debug;
+		};
+		DA26C5CE2EDFA545009E5E83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 495M5GQ94R;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Refuge.Texas-DailyUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Texas Daily";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DA26C5A02EDFA544009E5E83 /* Build configuration list for PBXProject "Texas Daily" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA26C5C42EDFA545009E5E83 /* Debug */,
+				DA26C5C52EDFA545009E5E83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DA26C5C62EDFA545009E5E83 /* Build configuration list for PBXNativeTarget "Texas Daily" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA26C5C72EDFA545009E5E83 /* Debug */,
+				DA26C5C82EDFA545009E5E83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DA26C5C92EDFA545009E5E83 /* Build configuration list for PBXNativeTarget "Texas DailyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA26C5CA2EDFA545009E5E83 /* Debug */,
+				DA26C5CB2EDFA545009E5E83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DA26C5CC2EDFA545009E5E83 /* Build configuration list for PBXNativeTarget "Texas DailyUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA26C5CD2EDFA545009E5E83 /* Debug */,
+				DA26C5CE2EDFA545009E5E83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DA26C67D2EE31506009E5E83 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.14.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DA26C67E2EE31560009E5E83 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DA26C67D2EE31506009E5E83 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = DA26C59D2EDFA544009E5E83 /* Project object */;
+}
