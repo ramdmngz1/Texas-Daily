@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Texas Daily</string>
+    <string name="notification_channel_name">Daily Fact Reminder</string>
+    <string name="notification_channel_description">Daily Texas fact reminders</string>
+    <string name="notification_title">Texas Daily Fact</string>
+    <string name="notification_body">Tap to read today\'s Texas fact.</string>
+</resources>

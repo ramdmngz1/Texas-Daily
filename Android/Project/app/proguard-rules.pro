@@ -1,0 +1,4 @@
+-keep class com.refuge.texasdaily.data.** { *; }
+-keepattributes Signature
+-keepattributes *Annotation*
+-dontwarn com.google.android.gms.**
