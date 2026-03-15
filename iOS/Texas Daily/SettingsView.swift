@@ -10,7 +10,7 @@
 //  Texas Daily
 //
 //  Settings:
-//  - Daily reminder toggle + time picker + "Save & Schedule" acknowledgment
+//  - Daily reminder toggle + time picker (auto-save + auto-schedule)
 //  - Light/Dark mode picker (AppStorage themeMode)
 //  - Support Us: Remove Ads + Restore Purchases (StoreKit restore mechanism)
 //
@@ -27,10 +27,6 @@ struct SettingsView: View {
     @AppStorage("tx_dailyReminderEnabled") private var dailyReminderEnabled: Bool = false
 
     @Environment(\.dismiss) private var dismiss
-
-    // Saved banner + “current time” display state
-    @State private var showSavedBanner = false
-    @State private var lastSavedNotificationTime: Date? = nil
 
     // Optional: simple loading states for buttons (no dependency on viewModel internals)
     @State private var isAttemptingPurchase = false
@@ -54,7 +50,7 @@ struct SettingsView: View {
     private var backgroundColor: Color {
         effectiveColorScheme == .dark
         ? Color(red: 0.07, green: 0.08, blue: 0.10)   // deep charcoal
-        : Color(red: 0.97, green: 0.96, blue: 0.90)   // limestone
+        : Color(red: 0.961, green: 0.961, blue: 0.863) // app icon tan #F5F5DC
     }
 
     private var inkColor: Color {
@@ -84,10 +80,6 @@ struct SettingsView: View {
             backgroundColor
                 .ignoresSafeArea()
 
-            PaperBackground()
-                .ignoresSafeArea()
-                .opacity(effectiveColorScheme == .dark ? 0 : 0.35)
-
             VStack(spacing: 0) {
                 header
 
@@ -103,42 +95,16 @@ struct SettingsView: View {
                     .padding(.bottom, 24)
                 }
             }
-
-            // Lightweight “Saved” banner
-            if showSavedBanner {
-                VStack {
-                    HStack(spacing: 10) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(accentGreen)
-                        Text("Saved & scheduled.")
-                            .font(.system(size: 14, weight: .semibold))
-                            .foregroundColor(inkColor)
-                    }
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 10)
-                    .background(
-                        RoundedRectangle(cornerRadius: 14, style: .continuous)
-                            .fill(cardColor)
-                    )
-                    .shadow(color: Color.black.opacity(0.10), radius: 10, x: 0, y: 6)
-                    .padding(.top, 10)
-
-                    Spacer()
-                }
-                .transition(.move(edge: .top).combined(with: .opacity))
-                .animation(.spring(response: 0.3, dampingFraction: 0.85), value: showSavedBanner)
-            }
         }
-        // IMPORTANT: This makes the Settings screen re-render instantly when user changes theme.
-        .environment(\.colorScheme, effectiveColorScheme)
-        .onAppear {
-            // Show something sensible right away
-            lastSavedNotificationTime = viewModel.notificationTime
+        // Ensure both SwiftUI content and the iOS status bar update with theme changes.
+        .preferredColorScheme(effectiveColorScheme)
+        .onChange(of: dailyReminderEnabled) { isEnabled in
+            // Keep persistence and scheduling in sync instantly when toggle changes.
+            viewModel.setDailyReminderEnabled(isEnabled)
         }
-        .onChange(of: dailyReminderEnabled) { _ in
-            // Turning reminders off should immediately cancel the pending notification.
-            guard dailyReminderEnabled == false else { return }
-            Task { await viewModel.scheduleDailyReminderIfEnabled() }
+        .onChange(of: viewModel.notificationTime) { _ in
+            // Time picker changes are saved immediately; if enabled this also re-schedules.
+            viewModel.saveNotificationTime()
         }
     }
 
@@ -219,41 +185,13 @@ struct SettingsView: View {
                     .frame(maxWidth: .infinity)
                     .clipped()
 
-                    if let lastSaved = lastSavedNotificationTime {
-                        Text("Saved time: \(formattedTime(lastSaved))")
-                            .font(.system(size: 13, weight: .medium))
-                            .foregroundColor(inkColor.opacity(0.8))
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(accentGreen)
+                        Text("Reminder is ON. Saved time: \(formattedTime(viewModel.notificationTime)).")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundColor(inkColor.opacity(0.9))
                     }
-
-                    Button {
-                        Haptics.medium()
-                        viewModel.saveNotificationTime()
-                        lastSavedNotificationTime = viewModel.notificationTime
-
-                        withAnimation {
-                            showSavedBanner = true
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            withAnimation {
-                                showSavedBanner = false
-                            }
-                        }
-                    } label: {
-                        Text("Save & Schedule")
-                            .font(.system(size: 15, weight: .semibold))
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 10)
-                            .background(
-                                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                    .fill(accentGreen)
-                            )
-                    }
-                    .buttonStyle(.plain)
-
-                    Text("We’ll send a daily notification at \(formattedTime(viewModel.notificationTime)).")
-                        .font(.system(size: 12))
-                        .foregroundColor(inkColor.opacity(0.6))
                 }
             }
         }

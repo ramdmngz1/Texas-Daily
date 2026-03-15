@@ -7,12 +7,12 @@
 
     <application
         android:name=".TexasDailyApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TexasDaily">
+        android:theme="@style/Theme.TexasDaily.Splash">
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
@@ -30,7 +30,7 @@
 
         <receiver
             android:name=".notifications.BootReceiver"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

@@ -20,6 +20,7 @@ final class TexasAppViewModel: ObservableObject {
     @Published var adsRemoved: Bool
     @Published var isVerifyingEntitlements: Bool = true
     @Published var adsSDKReady: Bool = false
+    @Published var onboardingDone: Bool = false
 
     // Computed once at init — facts are immutable at runtime
     let availableCategories: [String]
@@ -32,6 +33,8 @@ final class TexasAppViewModel: ObservableObject {
     private let reminderHourKey = "tx_reminder_hour"
     private let reminderMinuteKey = "tx_reminder_minute"
     private let dailyReminderEnabledKey = "tx_dailyReminderEnabled"
+    private let onboardingDoneKey = "tx_onboarding_done"
+    private let adsRemovedCachedKey = "tx_ads_removed_cached"
 
     // ✅ Put your real StoreKit product id here
     private let removeAdsProductId = "com.refuge.texasdaily.removead"
@@ -41,8 +44,9 @@ final class TexasAppViewModel: ObservableObject {
 
     // MARK: - Init
     init() {
-        // adsRemoved is always false on launch; StoreKit is the sole source of truth
-        self.adsRemoved = false
+        // Use last known entitlement state for faster first render;
+        // refreshEntitlements() remains the source of truth.
+        self.adsRemoved = UserDefaults.standard.bool(forKey: adsRemovedCachedKey)
 
         // Cache sorted unique categories once — facts never change at runtime
         self.availableCategories = Array(Set(FactStore.shared.facts.map { $0.category })).sorted()
@@ -73,11 +77,20 @@ final class TexasAppViewModel: ObservableObject {
         comps.minute = minute
         self.notificationTime = Calendar.current.date(from: comps) ?? Date()
 
+        // Load onboarding state
+        self.onboardingDone = UserDefaults.standard.bool(forKey: onboardingDoneKey)
+
         // Seed the first fact
         refreshTodayFact(haptic: false)
 
         // Refresh entitlements on launch (important for restore)
         Task { await refreshEntitlements() }
+    }
+
+    // MARK: - Onboarding
+    func completeOnboarding() {
+        onboardingDone = true
+        UserDefaults.standard.set(true, forKey: onboardingDoneKey)
     }
 
     // MARK: - Facts
@@ -114,13 +127,29 @@ final class TexasAppViewModel: ObservableObject {
     }
 
     // MARK: - Notifications
-    /// Called by SettingsView "Save" button.
+    /// Persists the selected reminder time.
+    /// If reminders are enabled, this also re-schedules immediately.
     func saveNotificationTime() {
         let comps = Calendar.current.dateComponents([.hour, .minute], from: notificationTime)
         UserDefaults.standard.set(comps.hour ?? 9, forKey: reminderHourKey)
         UserDefaults.standard.set(comps.minute ?? 0, forKey: reminderMinuteKey)
 
+        let enabled = UserDefaults.standard.object(forKey: dailyReminderEnabledKey) as? Bool ?? false
+        guard enabled else { return }
+
         Task { await scheduleDailyReminderIfEnabled() }
+    }
+
+    /// Enables/disables daily reminders immediately.
+    /// When enabled, the currently selected time is persisted and scheduled.
+    func setDailyReminderEnabled(_ enabled: Bool) {
+        UserDefaults.standard.set(enabled, forKey: dailyReminderEnabledKey)
+
+        if enabled {
+            saveNotificationTime()
+        } else {
+            Task { await scheduleDailyReminderIfEnabled() }
+        }
     }
 
     /// Called on app launch (TexasDailyApp.swift) and after saving time.
@@ -211,6 +240,7 @@ final class TexasAppViewModel: ObservableObject {
         }
 
         adsRemoved = hasRemoveAds
+        UserDefaults.standard.set(hasRemoveAds, forKey: adsRemovedCachedKey)
         isVerifyingEntitlements = false
     }
 

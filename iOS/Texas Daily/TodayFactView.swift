@@ -30,7 +30,7 @@ struct TodayFactView: View {
             return Color(red: 0.07, green: 0.08, blue: 0.10)
         } else {
             // Limestone parchment
-            return Color(red: 0.97, green: 0.96, blue: 0.90)
+            return Color(red: 0.961, green: 0.961, blue: 0.863)
         }
     }
 
@@ -71,13 +71,6 @@ struct TodayFactView: View {
 
     var body: some View {
         ZStack {
-            backgroundColor
-                .ignoresSafeArea()
-
-            PaperBackground()
-                .ignoresSafeArea()
-                .opacity(colorScheme == .dark ? 0 : 0.35)
-
             VStack(spacing: 0) {
                 headerBar
 
@@ -381,7 +374,7 @@ struct CategoryFilterSheet: View {
         if colorScheme == .dark {
             return Color(red: 0.07, green: 0.08, blue: 0.10)
         } else {
-            return Color(red: 0.97, green: 0.96, blue: 0.90)
+            return Color(red: 0.961, green: 0.961, blue: 0.863)
         }
     }
 
@@ -409,10 +402,6 @@ struct CategoryFilterSheet: View {
         ZStack {
             backgroundColor
                 .ignoresSafeArea()
-
-            PaperBackground()
-                .ignoresSafeArea()
-                .opacity(colorScheme == .dark ? 0 : 0.30)
 
             VStack(spacing: 0) {
                 header

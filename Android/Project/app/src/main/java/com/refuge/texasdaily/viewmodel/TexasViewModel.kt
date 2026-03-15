@@ -27,6 +27,7 @@ private val KEY_REMINDER_ENABLED = booleanPreferencesKey("reminder_enabled")
 private val KEY_REMINDER_HOUR = intPreferencesKey("reminder_hour")
 private val KEY_REMINDER_MINUTE = intPreferencesKey("reminder_minute")
 private val KEY_DARK_MODE = booleanPreferencesKey("dark_mode")
+private val KEY_ONBOARDING_DONE = booleanPreferencesKey("onboarding_done")
 
 class TexasViewModel(
     private val context: Context,
@@ -56,6 +57,9 @@ class TexasViewModel(
     private val _isDarkMode = MutableStateFlow(false)
     val isDarkMode: StateFlow<Boolean> = _isDarkMode
 
+    private val _onboardingDone = MutableStateFlow(false)
+    val onboardingDone: StateFlow<Boolean> = _onboardingDone
+
     init {
         _allCategories.value = repository.getCategories()
         viewModelScope.launch {
@@ -65,6 +69,7 @@ class TexasViewModel(
             _reminderHour.value = prefs[KEY_REMINDER_HOUR] ?: 9
             _reminderMinute.value = prefs[KEY_REMINDER_MINUTE] ?: 0
             _isDarkMode.value = prefs[KEY_DARK_MODE] ?: false
+            _onboardingDone.value = prefs[KEY_ONBOARDING_DONE] ?: false
             loadNewFact()
         }
     }
@@ -86,6 +91,13 @@ class TexasViewModel(
         _selectedCategories.value = emptySet()
         viewModelScope.launch {
             context.dataStore.edit { it[KEY_CATEGORIES] = emptySet() }
+        }
+    }
+
+    fun completeOnboarding() {
+        _onboardingDone.value = true
+        viewModelScope.launch {
+            context.dataStore.edit { it[KEY_ONBOARDING_DONE] = true }
         }
     }
 

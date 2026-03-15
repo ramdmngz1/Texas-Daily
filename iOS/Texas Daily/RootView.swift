@@ -14,7 +14,7 @@ struct RootView: View {
         if colorScheme == .dark {
             return Color(red: 0.07, green: 0.08, blue: 0.10)   // deep charcoal
         } else {
-            return Color(red: 0.97, green: 0.96, blue: 0.90)   // limestone
+            return Color(red: 0.961, green: 0.961, blue: 0.863) // app icon tan #F5F5DC
         }
     }
 
@@ -23,6 +23,16 @@ struct RootView: View {
     }
 
     var body: some View {
+        if !viewModel.onboardingDone {
+            OnboardingView { viewModel.completeOnboarding() }
+                .background(backgroundColor.ignoresSafeArea())
+        } else {
+            mainContent
+        }
+    }
+
+    @ViewBuilder
+    private var mainContent: some View {
         ZStack(alignment: .topLeading) {
             // Base background (TodayFactView also paints its own, this just
             // guarantees no weird stripes during transitions)
@@ -33,13 +43,11 @@ struct RootView: View {
                 TodayFactView()
                     .environmentObject(viewModel)
 
-                // Only show banner once StoreKit is verified, ads SDK is initialized, and ads are not removed
-                if !viewModel.isVerifyingEntitlements && viewModel.adsSDKReady && !viewModel.adsRemoved {
+                // Show banner when ads are ready and not removed.
+                if viewModel.adsSDKReady && !viewModel.adsRemoved {
                     BannerAdView()
                         .frame(height: 50)
-                        .background(
-                            Color.black.opacity(colorScheme == .dark ? 0.35 : 0.05)
-                        )
+                        .background(backgroundColor)
                 }
             }
 

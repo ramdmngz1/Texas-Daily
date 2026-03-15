@@ -16,12 +16,12 @@ class FactRepository(private val context: Context) {
     fun getCategories(): List<String> =
         allFacts.map { it.category }.distinct().sorted()
 
-    fun randomFact(selectedCategories: Set<String>): TexasFact {
+    fun randomFact(selectedCategories: Set<String>): TexasFact? {
         val pool = if (selectedCategories.isEmpty()) {
             allFacts
         } else {
             allFacts.filter { it.category in selectedCategories }
         }
-        return pool.random()
+        return pool.randomOrNull()
     }
 }

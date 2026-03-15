@@ -14,7 +14,7 @@ struct FactShareCard: View {
 
     private var accentGreen: Color { Color(red: 0.52, green: 0.65, blue: 0.23) }
     private var inkColor: Color    { Color(red: 0.30, green: 0.21, blue: 0.16) }
-    private var bgColor: Color     { Color(red: 0.97, green: 0.96, blue: 0.90) }
+    private var bgColor: Color     { Color(red: 0.961, green: 0.961, blue: 0.863) }
     private var chipBg: Color      { Color(red: 0.92, green: 0.95, blue: 0.90) }
 
     var body: some View {

@@ -53,26 +53,32 @@ struct TexasDailyApp: App {
         }
 
         // Step 2: Present the consent form if one is required.
-        if let rootVC = rootViewController {
-            do {
-                try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-                    ConsentForm.loadAndPresentIfRequired(from: rootVC) { error in
-                        if let error {
-                            continuation.resume(throwing: error)
-                        } else {
-                            continuation.resume()
-                        }
+        // `from:` accepts nil; this avoids missing the flow when key window is not ready yet.
+        do {
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                ConsentForm.loadAndPresentIfRequired(from: rootViewController) { error in
+                    if let error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume()
                     }
                 }
-            } catch {
-                // Form failed to load or present; fall through.
             }
+        } catch {
+            // Form failed to load or present; fall through.
         }
 
         // Step 3: Start ads only when consent has been obtained (or is not required).
         let canRequestAds = ConsentInformation.shared.canRequestAds
         if canRequestAds {
             await MobileAds.shared.start()
+            #if DEBUG
+            print("✅ AdMob started (consent allows ad requests).")
+            #endif
+        } else {
+            #if DEBUG
+            print("ℹ️ AdMob not started yet (consent currently does not allow ad requests).")
+            #endif
         }
         return canRequestAds
     }

@@ -21,7 +21,7 @@
             "fact": "The Alamo fell after a 13-day siege during the Texas Revolution.",
             "category": "History",
             "date": "1836-03-06",
-            "background": "Mexican forces under Santa Anna overran the Texian defenders at the Alamo in San Antonio. The battle became a rallying cry for independence with the phrase “Remember the Alamo.”",
+            "background": "Mexican forces under Santa Anna overran the Texian defenders at the Alamo in San Antonio. The battle became a rallying cry for independence with the phrase \"Remember the Alamo.\"",
             "source": "Handbook of Texas Online"
         },
         {
@@ -130,7 +130,7 @@
         },
         {
             "id": 17,
-            "fact": "The official nickname of Texas is “The Lone Star State.”",
+            "fact": "The official nickname of Texas is \"The Lone Star State.\"",
             "category": "Culture",
             "date": null,
             "background": "The lone star symbolizes Texas’s history as an independent republic and its enduring spirit of independence and unity.",
@@ -213,7 +213,7 @@
             "fact": "The Houston Astrodome was the world's first domed sports stadium.",
             "category": "Culture",
             "date": "1965-04-09",
-            "background": "Nicknamed the “Eighth Wonder of the World,” the Astrodome introduced innovations such as artificial turf and climate-controlled sporting environments.",
+            "background": "Nicknamed the \"Eighth Wonder of the World,\" the Astrodome introduced innovations such as artificial turf and climate-controlled sporting environments.",
             "source": "Houston sports archives"
         },
         {
@@ -338,7 +338,7 @@
         },
         {
             "id": 43,
-            "fact": "The Texas flag is the only state flag allowed to fly at the same height as the U.S. flag on separate poles.",
+            "fact": "Texas law allows the state flag to fly at the same height as the U.S. flag on a separate pole, reflecting its history as an independent republic.",
             "category": "History",
             "date": null,
             "background": "Texas law specifies how the Lone Star Flag is flown, and tradition emphasizes its equal stature due to Texas’s history as an independent republic.",
@@ -346,7 +346,7 @@
         },
         {
             "id": 44,
-            "fact": "The phrase “Don’t Mess with Texas” began as an anti-litter campaign slogan.",
+            "fact": "The phrase \"Don’t Mess with Texas\" began as an anti-litter campaign slogan.",
             "category": "Culture",
             "date": "1986-01-01",
             "background": "Launched in the 1980s, the campaign used bold messaging and celebrity endorsements to reduce roadside litter and became part of Texas pop culture.",
@@ -362,11 +362,11 @@
         },
         {
             "id": 46,
-            "fact": "Texas has four major desert regions touching or within its borders.",
+            "fact": "The Chihuahuan Desert, the largest desert in North America, extends deep into West Texas.",
             "category": "Geography",
             "date": null,
-            "background": "Parts of the Chihuahuan Desert, Sonoran Desert, Mojave Desert, and Great Plains semi-arid regions influence the climate and landscapes of West Texas.",
-            "source": "Desert ecosystem references"
+            "background": "West Texas sits within the Chihuahuan Desert, which spans parts of Texas, New Mexico, Arizona, and northern Mexico. The region's rugged desert landscapes shape the climate, wildlife, and culture of the Trans-Pecos area.",
+            "source": "National Park Service — Chihuahuan Desert"
         },
         {
             "id": 47,
@@ -421,7 +421,7 @@
             "fact": "Lady Bird Johnson, from Texas, championed highway beautification across the United States.",
             "category": "People",
             "date": null,
-            "background": "As First Lady, Claudia “Lady Bird” Johnson promoted wildflower planting and scenic preservation, influencing the look of highways in Texas and beyond.",
+            "background": "As First Lady, Claudia \"Lady Bird\" Johnson promoted wildflower planting and scenic preservation, influencing the look of highways in Texas and beyond.",
             "source": "LBJ Presidential Library"
         },
         {
@@ -450,10 +450,10 @@
         },
         {
             "id": 57,
-            "fact": "The first word spoken from the Moon to Mission Control in Houston was 'Houston.'",
+            "fact": "One of the most famous transmissions in history — 'Houston, Tranquility Base here. The Eagle has landed' — was spoken from the Moon to NASA's Mission Control in Houston.",
             "category": "History",
             "date": "1969-07-20",
-            "background": "During the Apollo 11 mission, astronaut Neil Armstrong reported, “Houston, Tranquility Base here. The Eagle has landed,” acknowledging the control center in Texas.",
+            "background": "During the Apollo 11 lunar landing on July 20, 1969, Neil Armstrong radioed Mission Control in Houston with the iconic words confirming humanity's first successful Moon landing.",
             "source": "NASA mission transcripts"
         },
         {
@@ -618,10 +618,10 @@
         },
         {
             "id": 78,
-            "fact": "The Battle of Gonzales is remembered for the “Come and Take It” flag.",
+            "fact": "The Battle of Gonzales is remembered for the \"Come and Take It\" flag.",
             "category": "History",
             "date": "1835-10-02",
-            "background": "Texian settlers refused to surrender a small cannon to Mexican forces, raising a flag with a black star and the phrase “Come and Take It,” symbolizing resistance.",
+            "background": "Texian settlers refused to surrender a small cannon to Mexican forces, raising a flag with a black star and the phrase \"Come and Take It,\" symbolizing resistance.",
             "source": "Texas Revolution histories"
         },
         {
@@ -3025,14 +3025,6 @@
             "source": "Community food culture accounts"
         },
         {
-            "id": 379,
-            "fact": "Some Texans decorate pickup trucks with longhorn hood ornaments or custom ranch logos.",
-            "category": "Culture",
-            "date": null,
-            "background": "Vehicles serve as rolling expressions of ranch pride, sports loyalties, and personal style.",
-            "source": "Auto and truck culture observations"
-        },
-        {
             "id": 380,
             "fact": "The word 'y’all' is widely used in Texas as a plural form of 'you.'",
             "category": "Culture",
@@ -3346,10 +3338,10 @@
         },
         {
             "id": 419,
-            "fact": "The first word spoken from the Moon to Earth was 'Houston.'",
+            "fact": "Neil Armstrong's transmission 'Houston, Tranquility Base here. The Eagle has landed' connected the Moon to NASA's Mission Control in Houston.",
             "category": "Science/Tech",
             "date": "1969-07-20",
-            "background": "During the Apollo 11 landing, astronaut Neil Armstrong reported 'Houston, Tranquility Base here. The Eagle has landed,' addressing mission control in Texas.",
+            "background": "During the Apollo 11 landing on July 20, 1969, Armstrong confirmed the first successful lunar landing by radioing Houston — cementing the city's place in space history.",
             "source": "Apollo 11 mission transcripts"
         },
         {
@@ -4170,7 +4162,7 @@
           },
           {
             "id": 522,
-            "fact": "The book “Friday Night Lights” is based on a Texas high school football team in Odessa.",
+            "fact": "The book \"Friday Night Lights\" is based on a Texas high school football team in Odessa.",
             "category": "Sports",
             "date": null,
             "background": "H. G. Bissinger’s 1990 book follows the 1988 Permian High School Panthers, capturing the town’s intense football culture and inspiring both a movie and TV series.",
@@ -4178,7 +4170,7 @@
           },
           {
             "id": 523,
-            "fact": "The phrase “Friday Night Lights” has become shorthand for Texas high school football culture.",
+            "fact": "The phrase \"Friday Night Lights\" has become shorthand for Texas high school football culture.",
             "category": "Sports",
             "date": null,
             "background": "Because of the book, film, and TV series, the term now evokes small-town Texas stadiums lit up on autumn Friday nights across the state.",
@@ -4205,7 +4197,7 @@
             "fact": "Hall of Fame running back Earl Campbell starred for the Texas Longhorns before playing for the Houston Oilers.",
             "category": "Sports",
             "date": null,
-            "background": "The “Tyler Rose” won the Heisman Trophy at Texas in 1977 and became an NFL MVP and rushing champion with Houston.",
+            "background": "The \"Tyler Rose\" won the Heisman Trophy at Texas in 1977 and became an NFL MVP and rushing champion with Houston.",
             "source": "Pro Football Hall of Fame"
           },
           {
@@ -4338,7 +4330,7 @@
           },
           {
             "id": 543,
-            "fact": "The term “Texas high school football” often appears in national media as a symbol of intense community sports culture.",
+            "fact": "The term \"Texas high school football\" often appears in national media as a symbol of intense community sports culture.",
             "category": "Sports",
             "date": null,
             "background": "Articles, documentaries, and TV segments regularly use Texas programs as examples when discussing the passion and pressure around prep football.",
@@ -4394,7 +4386,7 @@
           },
           {
             "id": 550,
-            "fact": "The Houston Astros played for decades in the Astrodome, nicknamed the “Eighth Wonder of the World.”",
+            "fact": "The Houston Astros played for decades in the Astrodome, nicknamed the \"Eighth Wonder of the World.\"",
             "category": "Sports",
             "date": null,
             "background": "Opened in 1965 in Houston, the Astrodome was the first domed multipurpose stadium and introduced synthetic turf to major professional sports.",
@@ -4642,7 +4634,7 @@
           },
           {
             "id": 581,
-            "fact": "The Houston Cougars men’s basketball program has a long history, including the famed “Phi Slama Jama” teams of the 1980s.",
+            "fact": "The Houston Cougars men’s basketball program has a long history, including the famed \"Phi Slama Jama\" teams of the 1980s.",
             "category": "Sports",
             "date": null,
             "background": "Led by stars like Hakeem Olajuwon and Clyde Drexler, those Houston teams reached multiple Final Fours and changed how people viewed above-the-rim college basketball.",
@@ -4799,6 +4791,814 @@
             "date": null,
             "background": "The state’s population, geography, and culture support a deep sports ecosystem, from youth leagues and high schools to college and professional teams.",
             "source": "General sports overviews of Texas"
+          },
+          {
+            "id": 601,
+            "fact": "The flags of six nations have flown over Texas: Spain, France, Mexico, the Republic of Texas, the Confederate States, and the United States.",
+            "category": "History",
+            "date": null,
+            "background": "Texas history is often summarized as the \"Six Flags of Texas,\" reflecting changes in sovereignty over centuries.",
+            "source": "Texas State Library and Archives Commission"
+          },
+          {
+            "id": 602,
+            "fact": "Delegates at Washington-on-the-Brazos adopted the Texas Declaration of Independence on March 2, 1836.",
+            "category": "History",
+            "date": "1836-03-02",
+            "background": "The convention declared Texas a free and independent republic as fighting continued during the Texas Revolution.",
+            "source": "Texas State Library and Archives Commission"
+          },
+          {
+            "id": 603,
+            "fact": "The Republic of Texas existed from 1836 until Texas statehood in 1845.",
+            "category": "History",
+            "date": null,
+            "background": "Texas functioned as an independent nation for nearly a decade between independence and annexation.",
+            "source": "Texas State Library and Archives Commission"
+          },
+          {
+            "id": 604,
+            "fact": "Texas was admitted to the United States on December 29, 1845.",
+            "category": "History",
+            "date": "1845-12-29",
+            "background": "After years of diplomacy and debate, Congress approved Texas statehood late in 1845.",
+            "source": "Texas State Library and Archives Commission"
+          },
+          {
+            "id": 605,
+            "fact": "Texas joined the Confederacy in 1861 after a secession convention approved an ordinance of secession.",
+            "category": "History",
+            "date": "1861-02-01",
+            "background": "The Civil War period marked another major change in Texas government and allegiance.",
+            "source": "Texas State Library and Archives Commission"
+          },
+          {
+            "id": 606,
+            "fact": "Juneteenth commemorates June 19, 1865, when General Order No. 3 was announced in Galveston.",
+            "category": "History",
+            "date": "1865-06-19",
+            "background": "The date marks when news of emancipation was formally enforced in Texas.",
+            "source": "Texas State Library and Archives Commission"
+          },
+          {
+            "id": 607,
+            "fact": "Texas still operates under the state constitution adopted in 1876.",
+            "category": "History",
+            "date": "1876-01-01",
+            "background": "The 1876 constitution remains in force, although it has been amended many times.",
+            "source": "Texas Legislative Council"
+          },
+          {
+            "id": 608,
+            "fact": "The Spindletop gusher near Beaumont in 1901 helped launch Texas' modern oil boom.",
+            "category": "History",
+            "date": "1901-01-10",
+            "background": "The discovery transformed Texas industry and accelerated growth in the Gulf Coast region.",
+            "source": "Handbook of Texas Online"
+          },
+          {
+            "id": 609,
+            "fact": "The Galveston hurricane of 1900 is widely recognized as the deadliest natural disaster in U.S. history.",
+            "category": "History",
+            "date": "1900-09-08",
+            "background": "The storm devastated Galveston and changed coastal planning and weather warning systems.",
+            "source": "NOAA / National Park Service"
+          },
+          {
+            "id": 610,
+            "fact": "The current Texas State Capitol was dedicated in 1888.",
+            "category": "History",
+            "date": "1888-05-16",
+            "background": "The granite capitol in Austin became a central symbol of Texas state government.",
+            "source": "Texas State Preservation Board / Texas State Library"
+          },
+          {
+            "id": 611,
+            "fact": "Texas shares borders with four U.S. states: New Mexico, Oklahoma, Arkansas, and Louisiana.",
+            "category": "Geography",
+            "date": null,
+            "background": "Its central location links the Southwest, South, and Gulf Coast regions of the United States.",
+            "source": "Texas State Library and Archives Commission / U.S. Census"
+          },
+          {
+            "id": 612,
+            "fact": "The U.S. Census lists Texas land area at 261,267.85 square miles (2020).",
+            "category": "Geography",
+            "date": null,
+            "background": "Texas spans deserts, plains, forests, hill country, and a long Gulf Coast.",
+            "source": "U.S. Census Bureau QuickFacts"
+          },
+          {
+            "id": 613,
+            "fact": "Texas is the second-largest U.S. state by total area, behind Alaska.",
+            "category": "Geography",
+            "date": null,
+            "background": "Its size contributes to major regional differences in climate, culture, and terrain.",
+            "source": "U.S. Census Bureau"
+          },
+          {
+            "id": 614,
+            "fact": "Guadalupe Peak is the highest natural point in Texas at 8,751 feet above sea level.",
+            "category": "Geography",
+            "date": null,
+            "background": "The peak is in Guadalupe Mountains National Park in far West Texas.",
+            "source": "National Park Service"
+          },
+          {
+            "id": 615,
+            "fact": "The Brazos River runs about 840 miles and is the longest river in Texas.",
+            "category": "Geography",
+            "date": null,
+            "background": "The river flows from the High Plains to the Gulf Coast and has shaped settlement and agriculture.",
+            "source": "Handbook of Texas Online"
+          },
+          {
+            "id": 616,
+            "fact": "The Trinity is the longest river whose entire course lies within Texas.",
+            "category": "Geography",
+            "date": null,
+            "background": "The river system passes through North and East Texas and reaches Trinity Bay.",
+            "source": "Handbook of Texas Online"
+          },
+          {
+            "id": 617,
+            "fact": "Palo Duro Canyon in the Panhandle is often described as the second-largest canyon in the United States.",
+            "category": "Geography",
+            "date": null,
+            "background": "The canyon's size and layered geology make it one of Texas' signature landforms.",
+            "source": "Texas Parks and Wildlife Department"
+          },
+          {
+            "id": 618,
+            "fact": "Most of Texas uses Central Time, but parts of far West Texas observe Mountain Time.",
+            "category": "Geography",
+            "date": null,
+            "background": "Traffic and transportation guidance identify El Paso and Hudspeth county areas in the Mountain zone.",
+            "source": "TxDOT"
+          },
+          {
+            "id": 619,
+            "fact": "The Rio Grande forms a major portion of the Texas-Mexico international boundary.",
+            "category": "Geography",
+            "date": null,
+            "background": "Border geography has long influenced trade, migration, and regional culture.",
+            "source": "Texas State Library / Handbook of Texas"
+          },
+          {
+            "id": 620,
+            "fact": "Texas has a long coastline on the Gulf of Mexico.",
+            "category": "Geography",
+            "date": null,
+            "background": "Coastal bays, estuaries, and ports are central to Texas ecology and commerce.",
+            "source": "Texas General Land Office / Texas Almanac"
+          },
+          {
+            "id": 621,
+            "fact": "'Don't Mess with Texas' began in 1986 as an anti-litter campaign.",
+            "category": "Culture",
+            "date": "1986-01-01",
+            "background": "The slogan became one of the most recognizable public campaigns associated with the state.",
+            "source": "TxDOT"
+          },
+          {
+            "id": 622,
+            "fact": "'Texas, Our Texas' is the official state song.",
+            "category": "Culture",
+            "date": null,
+            "background": "The Legislature adopted it in 1929, and it remains a formal civic symbol.",
+            "source": "Texas State Library and Archives Commission"
+          },
+          {
+            "id": 623,
+            "fact": "Chili is the official state dish of Texas.",
+            "category": "Culture",
+            "date": null,
+            "background": "The designation reflects the state's long culinary identity tied to chili cook-offs and regional food traditions.",
+            "source": "Texas Almanac"
+          },
+          {
+            "id": 624,
+            "fact": "Tortilla chips and salsa are the official state snack of Texas.",
+            "category": "Culture",
+            "date": null,
+            "background": "The snack was designated by the Legislature in 2003.",
+            "source": "Texas Almanac"
+          },
+          {
+            "id": 625,
+            "fact": "The square dance is the official state folk dance of Texas.",
+            "category": "Culture",
+            "date": null,
+            "background": "The designation reflects community dance traditions across generations.",
+            "source": "Texas Almanac"
+          },
+          {
+            "id": 626,
+            "fact": "Rodeo is the official state sport of Texas.",
+            "category": "Culture",
+            "date": null,
+            "background": "The Legislature designated rodeo in 1997, recognizing ranching and competition traditions.",
+            "source": "Texas Almanac"
+          },
+          {
+            "id": 627,
+            "fact": "The cowboy hat is an official state symbol of Texas.",
+            "category": "Culture",
+            "date": null,
+            "background": "The designation highlights cowboy culture's influence on Texas identity.",
+            "source": "Texas Almanac"
+          },
+          {
+            "id": 628,
+            "fact": "The cowboy boot is an official state symbol of Texas.",
+            "category": "Culture",
+            "date": null,
+            "background": "Bootmaking and western wear are enduring parts of Texas style and heritage.",
+            "source": "Texas Almanac"
+          },
+          {
+            "id": 629,
+            "fact": "The guitar is the official state musical instrument of Texas.",
+            "category": "Culture",
+            "date": null,
+            "background": "The designation reflects Texas' deep influence on country, blues, Tejano, and rock music traditions.",
+            "source": "Texas Almanac"
+          },
+          {
+            "id": 630,
+            "fact": "Sopaipilla and strudel are the official state pastries of Texas.",
+            "category": "Culture",
+            "date": null,
+            "background": "The dual designation reflects the blend of culinary traditions found across Texas communities.",
+            "source": "Texas Almanac"
+          },
+          {
+            "id": 631,
+            "fact": "The roots of the UIL date to 1910, and the modern UIL was formed in 1913.",
+            "category": "Sports",
+            "date": null,
+            "background": "The league grew from early debating and athletic associations connected to the University of Texas.",
+            "source": "University Interscholastic League"
+          },
+          {
+            "id": 632,
+            "fact": "The UIL describes itself as the largest inter-school organization of its kind in the world.",
+            "category": "Sports",
+            "date": null,
+            "background": "It oversees academic, music, and athletic competition for Texas public schools.",
+            "source": "University Interscholastic League"
+          },
+          {
+            "id": 633,
+            "fact": "Texas Motor Speedway hosted its first NASCAR doubleheader weekend in April 1997.",
+            "category": "Sports",
+            "date": "1997-04-05",
+            "background": "The event marked the start of major NASCAR competition at the Fort Worth-area track.",
+            "source": "Texas Motor Speedway"
+          },
+          {
+            "id": 634,
+            "fact": "The Dallas Cowboys were awarded an NFL expansion franchise in 1960.",
+            "category": "Sports",
+            "date": "1960-01-28",
+            "background": "The franchise quickly became one of the league's most recognized teams.",
+            "source": "Dallas Cowboys / NFL history"
+          },
+          {
+            "id": 635,
+            "fact": "The Houston Texans became the NFL's 32nd franchise during the 2002 season.",
+            "category": "Sports",
+            "date": "2002-01-01",
+            "background": "Their inaugural year restored an NFL team to Houston.",
+            "source": "NFL Football Operations"
+          },
+          {
+            "id": 636,
+            "fact": "Houston's MLB franchise debuted as the Colt .45s in 1962.",
+            "category": "Sports",
+            "date": "1962-04-10",
+            "background": "The team played its first major league game in Houston on April 10, 1962.",
+            "source": "Houston Astros"
+          },
+          {
+            "id": 637,
+            "fact": "Houston's MLB team changed its name from Colt .45s to Astros for the 1965 season.",
+            "category": "Sports",
+            "date": "1965-01-01",
+            "background": "The new name aligned with the move into the Astrodome and Houston's space-age identity.",
+            "source": "Houston Astros"
+          },
+          {
+            "id": 638,
+            "fact": "As of the 2025 season, Texas has made more Men's College World Series appearances than any other program.",
+            "category": "Sports",
+            "date": null,
+            "background": "NCAA records through 2025 list Texas at the top for CWS trips.",
+            "source": "NCAA"
+          },
+          {
+            "id": 639,
+            "fact": "As of the 2025 season, the Texas Longhorns have won six Men's College World Series national championships.",
+            "category": "Sports",
+            "date": null,
+            "background": "Texas is one of college baseball's most decorated programs.",
+            "source": "NCAA"
+          },
+          {
+            "id": 640,
+            "fact": "As of the 2025 season, Texas programs have won seven Men's College World Series titles in total.",
+            "category": "Sports",
+            "date": null,
+            "background": "NCAA lists six titles for Texas and one for Rice through the 2025 season.",
+            "source": "NCAA"
+          },
+          {
+            "id": 641,
+            "fact": "The Texas Constitution vests legislative power in a Senate and House of Representatives.",
+            "category": "Government",
+            "date": null,
+            "background": "Together, the two chambers form the Texas Legislature.",
+            "source": "Texas Constitution, Article III"
+          },
+          {
+            "id": 642,
+            "fact": "The Texas House of Representatives has 150 members.",
+            "category": "Government",
+            "date": null,
+            "background": "House membership size is set in the state constitution.",
+            "source": "Texas Constitution, Article III"
+          },
+          {
+            "id": 643,
+            "fact": "The Texas Senate has 31 members.",
+            "category": "Government",
+            "date": null,
+            "background": "Senators represent districts of roughly equal population across the state.",
+            "source": "Texas Legislative Council"
+          },
+          {
+            "id": 644,
+            "fact": "Regular Texas legislative sessions occur in odd-numbered years and may last up to 140 days.",
+            "category": "Government",
+            "date": null,
+            "background": "Session timing and duration are core features of Texas lawmaking.",
+            "source": "Texas Legislative Council"
+          },
+          {
+            "id": 645,
+            "fact": "Texas' executive department includes the governor, lieutenant governor, secretary of state, comptroller, land commissioner, and attorney general.",
+            "category": "Government",
+            "date": null,
+            "background": "Texas uses a plural executive model that distributes power across multiple statewide offices.",
+            "source": "Texas Constitution, Article IV"
+          },
+          {
+            "id": 646,
+            "fact": "Texas governors serve four-year terms.",
+            "category": "Government",
+            "date": null,
+            "background": "The governor's term length is defined in the state constitution.",
+            "source": "Texas Constitution, Article IV"
+          },
+          {
+            "id": 647,
+            "fact": "Texas judicial power is vested in multiple court levels, including a Supreme Court and a Court of Criminal Appeals.",
+            "category": "Government",
+            "date": null,
+            "background": "Article V lays out a multi-tier court structure for civil and criminal matters.",
+            "source": "Texas Constitution, Article V"
+          },
+          {
+            "id": 648,
+            "fact": "Texas has two courts of last resort: the Supreme Court for civil matters and the Court of Criminal Appeals for criminal cases.",
+            "category": "Government",
+            "date": null,
+            "background": "This split high-court structure is unusual among U.S. states.",
+            "source": "Texas Constitution, Article V"
+          },
+          {
+            "id": 649,
+            "fact": "Texas now has 15 courts of appeals, with the first 14 serving regional districts and the 15th holding specialized statewide jurisdiction.",
+            "category": "Government",
+            "date": null,
+            "background": "Intermediate appellate jurisdiction expanded with creation of the Fifteenth Court of Appeals.",
+            "source": "Texas Judicial Branch"
+          },
+          {
+            "id": 650,
+            "fact": "Texas does not levy a state personal income tax.",
+            "category": "Economy",
+            "date": null,
+            "background": "State revenue relies on other taxes and fees, including sales taxes.",
+            "source": "Texas Constitution / Texas Comptroller"
+          },
+          {
+            "id": 651,
+            "fact": "Texas' state sales and use tax rate is 6.25%.",
+            "category": "Economy",
+            "date": null,
+            "background": "Local jurisdictions may add sales taxes within state limits.",
+            "source": "Texas Comptroller of Public Accounts"
+          },
+          {
+            "id": 652,
+            "fact": "Local sales and use taxes in Texas cannot exceed 2%, making the maximum combined sales tax rate 8.25%.",
+            "category": "Economy",
+            "date": null,
+            "background": "State and local rate caps are defined in tax law and comptroller guidance.",
+            "source": "Texas Comptroller of Public Accounts"
+          },
+          {
+            "id": 653,
+            "fact": "Texas franchise tax is a privilege tax on taxable entities formed in Texas or doing business in Texas.",
+            "category": "Economy",
+            "date": null,
+            "background": "Businesses report and pay franchise tax annually under state rules.",
+            "source": "Texas Comptroller of Public Accounts"
+          },
+          {
+            "id": 654,
+            "fact": "Texas has no state property tax; property taxes are imposed by local taxing units.",
+            "category": "Economy",
+            "date": null,
+            "background": "School districts, cities, counties, and special districts set local property tax rates.",
+            "source": "Texas Comptroller of Public Accounts"
+          },
+          {
+            "id": 655,
+            "fact": "The U.S. Energy Information Administration identifies Texas as the top crude-oil-producing state.",
+            "category": "Economy",
+            "date": null,
+            "background": "Texas energy production remains central to both the state and national economy.",
+            "source": "U.S. Energy Information Administration"
+          },
+          {
+            "id": 656,
+            "fact": "In 2024, Texas led the nation in wind-powered electricity generation.",
+            "category": "Economy",
+            "date": null,
+            "background": "EIA reports Texas produced nearly three-tenths of U.S. wind-sourced electricity that year.",
+            "source": "U.S. Energy Information Administration"
+          },
+          {
+            "id": 657,
+            "fact": "Texas generates more total electricity than any other U.S. state.",
+            "category": "Economy",
+            "date": null,
+            "background": "Its large population, industrial base, and generation fleet drive nation-leading output.",
+            "source": "U.S. Energy Information Administration"
+          },
+          {
+            "id": 658,
+            "fact": "Texas' 6.25% state sales tax rate has been in effect since July 1, 1990.",
+            "category": "Economy",
+            "date": "1990-07-01",
+            "background": "Historical tax-rate tables show the current state rate has remained unchanged since 1990.",
+            "source": "Texas Comptroller of Public Accounts"
+          },
+          {
+            "id": 659,
+            "fact": "Sam Houston became the first regularly elected president of the Republic of Texas in 1836.",
+            "category": "People",
+            "date": "1836-09-01",
+            "background": "Houston was one of the central political and military figures of early Texas history.",
+            "source": "Handbook of Texas Online"
+          },
+          {
+            "id": 660,
+            "fact": "Sam Houston served as both the first and third president of the Republic of Texas.",
+            "category": "People",
+            "date": null,
+            "background": "Constitutional term limits prevented immediate reelection, so he returned for a later term.",
+            "source": "Handbook of Texas Online"
+          },
+          {
+            "id": 661,
+            "fact": "Lyndon B. Johnson was born on August 27, 1908, near Stonewall in the Texas Hill Country.",
+            "category": "People",
+            "date": "1908-08-27",
+            "background": "The future 36th U.S. president grew up in Central Texas.",
+            "source": "LBJ Presidential Library"
+          },
+          {
+            "id": 662,
+            "fact": "Dwight D. Eisenhower was born in Denison, Texas, on October 14, 1890.",
+            "category": "People",
+            "date": "1890-10-14",
+            "background": "He later became the 34th president of the United States.",
+            "source": "Eisenhower Presidential Library"
+          },
+          {
+            "id": 663,
+            "fact": "Barbara Jordan was elected to the Texas Senate in 1966 as the first Black woman to serve in that body.",
+            "category": "People",
+            "date": "1966-01-01",
+            "background": "Her election marked a major milestone in Texas and U.S. political history.",
+            "source": "National Archives / Congressional record materials"
+          },
+          {
+            "id": 664,
+            "fact": "In 1972, Barbara Jordan was elected to the U.S. House as the first woman elected in her own right to represent Texas.",
+            "category": "People",
+            "date": "1972-01-01",
+            "background": "She became a nationally influential voice on constitutional issues.",
+            "source": "National Archives"
+          },
+          {
+            "id": 665,
+            "fact": "Barbara Jordan became the first Black woman from a Southern state elected to the U.S. House of Representatives.",
+            "category": "People",
+            "date": null,
+            "background": "Her congressional service broke long-standing regional barriers in national politics.",
+            "source": "Congressional Record"
+          },
+          {
+            "id": 666,
+            "fact": "Aviator Bessie Coleman was born in Atlanta, Texas.",
+            "category": "People",
+            "date": "1892-01-26",
+            "background": "Coleman's early life in Texas preceded her pioneering aviation career.",
+            "source": "Texas Historical Commission / National Park Service"
+          },
+          {
+            "id": 667,
+            "fact": "In 1921, Bessie Coleman became the first Black American and first American woman to earn an international pilot's license.",
+            "category": "People",
+            "date": "1921-06-15",
+            "background": "She trained in France after U.S. schools refused to train her.",
+            "source": "National Park Service"
+          },
+          {
+            "id": 668,
+            "fact": "Texas designated the bluebonnet as the official state flower in 1901.",
+            "category": "Nature",
+            "date": "1901-01-01",
+            "background": "Bluebonnets bloom widely in spring and are one of the state's most recognized natural symbols.",
+            "source": "Texas State Library and Archives Commission"
+          },
+          {
+            "id": 669,
+            "fact": "The mockingbird is the official state bird of Texas.",
+            "category": "Nature",
+            "date": null,
+            "background": "Its adaptability and song made it a long-standing symbol in Texas wildlife identity.",
+            "source": "Texas State Library and Archives Commission"
+          },
+          {
+            "id": 670,
+            "fact": "The pecan tree is the official state tree of Texas.",
+            "category": "Nature",
+            "date": null,
+            "background": "Pecans are native to Texas river bottoms and important to state agriculture and cuisine.",
+            "source": "Texas State Library and Archives Commission"
+          },
+          {
+            "id": 671,
+            "fact": "The Guadalupe bass is the official state fish of Texas.",
+            "category": "Nature",
+            "date": null,
+            "background": "It is one of Texas' signature freshwater sport fish.",
+            "source": "Texas Parks and Wildlife Department"
+          },
+          {
+            "id": 672,
+            "fact": "The Guadalupe bass is found only in Texas in the wild.",
+            "category": "Nature",
+            "date": null,
+            "background": "The species is endemic to Texas and has been a focus of conservation work in Hill Country rivers.",
+            "source": "Texas Parks and Wildlife Department"
+          },
+          {
+            "id": 673,
+            "fact": "The nine-banded armadillo is the official state small mammal of Texas.",
+            "category": "Nature",
+            "date": null,
+            "background": "The armadillo was designated as an official state mammal symbol in 1995.",
+            "source": "Texas Almanac / Texas State symbols"
+          },
+          {
+            "id": 674,
+            "fact": "The Texas longhorn is the official state large mammal of Texas.",
+            "category": "Nature",
+            "date": null,
+            "background": "The longhorn remains a defining animal in Texas ranching history.",
+            "source": "Texas Almanac / Texas State symbols"
+          },
+          {
+            "id": 675,
+            "fact": "The Mexican free-tailed bat is the official state flying mammal of Texas.",
+            "category": "Nature",
+            "date": null,
+            "background": "Large bat colonies in Texas caves are among the most visible examples of this species.",
+            "source": "Texas Almanac / Texas State symbols"
+          },
+          {
+            "id": 676,
+            "fact": "The monarch butterfly is the official state insect of Texas.",
+            "category": "Nature",
+            "date": null,
+            "background": "Monarch migration routes and habitat in Texas make it a fitting symbol designation.",
+            "source": "Texas Almanac / Texas State symbols"
+          },
+          {
+            "id": 677,
+            "fact": "The Houston Ship Channel's opening was ceremonially observed on November 10, 1914.",
+            "category": "Infrastructure",
+            "date": "1914-11-10",
+            "background": "The channel established Houston as a major deep-water port and trade hub.",
+            "source": "Port Houston"
+          },
+          {
+            "id": 678,
+            "fact": "Dallas Fort Worth International Airport began operations on January 13, 1974.",
+            "category": "Infrastructure",
+            "date": "1974-01-13",
+            "background": "DFW grew into one of the world's busiest and most connected airports.",
+            "source": "DFW Airport"
+          },
+          {
+            "id": 679,
+            "fact": "DFW Airport covers more than 26.9 square miles (17,183 acres).",
+            "category": "Infrastructure",
+            "date": null,
+            "background": "Its land area makes it one of the largest airports by footprint.",
+            "source": "DFW Airport"
+          },
+          {
+            "id": 680,
+            "fact": "DFW Airport currently operates seven runways.",
+            "category": "Infrastructure",
+            "date": null,
+            "background": "Runway capacity supports major domestic and international passenger and cargo traffic.",
+            "source": "DFW Airport"
+          },
+          {
+            "id": 681,
+            "fact": "TxDOT reports jurisdiction over 81,035 centerline miles of roadway (2024).",
+            "category": "Infrastructure",
+            "date": null,
+            "background": "The state-maintained network includes interstates, U.S. routes, and other on-system roads.",
+            "source": "TxDOT Pocket Facts"
+          },
+          {
+            "id": 682,
+            "fact": "TxDOT's statewide monitoring program conducts more than 75,000 short-term traffic counts each year.",
+            "category": "Infrastructure",
+            "date": null,
+            "background": "Traffic counts support planning, safety analysis, and federal reporting.",
+            "source": "TxDOT"
+          },
+          {
+            "id": 683,
+            "fact": "Texas law allows speed limits up to 85 mph on highway segments designed and studied for that speed.",
+            "category": "Infrastructure",
+            "date": null,
+            "background": "Higher posted limits require engineering and safety review.",
+            "source": "TxDOT"
+          },
+          {
+            "id": 684,
+            "fact": "The Texas Highway Trunk System is limited to 11,500 miles by commission minute order.",
+            "category": "Infrastructure",
+            "date": null,
+            "background": "The network is intended to connect major cities, ports, and entry points.",
+            "source": "TxDOT"
+          },
+          {
+            "id": 685,
+            "fact": "TxDOT's departmental map visualizes on-system routes including interstate, U.S., state, and farm-to-market roads.",
+            "category": "Infrastructure",
+            "date": null,
+            "background": "The map is updated and published to show roads maintained by TxDOT.",
+            "source": "TxDOT"
+          },
+          {
+            "id": 686,
+            "fact": "NASA's Johnson Space Center was established in 1961 as the Manned Spacecraft Center.",
+            "category": "Science/Tech",
+            "date": "1961-01-01",
+            "background": "The center became NASA's primary home for human spaceflight operations.",
+            "source": "NASA"
+          },
+          {
+            "id": 687,
+            "fact": "NASA announced Houston as the site for its new human-spaceflight center on September 19, 1961.",
+            "category": "Science/Tech",
+            "date": "1961-09-19",
+            "background": "Site selection anchored Houston's long-term role in U.S. space exploration.",
+            "source": "NASA History"
+          },
+          {
+            "id": 688,
+            "fact": "The Manned Spacecraft Center officially opened for business in Houston on November 1, 1961.",
+            "category": "Science/Tech",
+            "date": "1961-11-01",
+            "background": "Work began in temporary offices while the permanent Clear Lake campus was built.",
+            "source": "NASA History"
+          },
+          {
+            "id": 689,
+            "fact": "The center was renamed the Lyndon B. Johnson Space Center in 1973.",
+            "category": "Science/Tech",
+            "date": "1973-01-01",
+            "background": "The name honors the Texas-born president associated with the U.S. space program era.",
+            "source": "NASA"
+          },
+          {
+            "id": 690,
+            "fact": "Johnson Space Center has long served as mission control and astronaut training headquarters for U.S. human spaceflight.",
+            "category": "Science/Tech",
+            "date": null,
+            "background": "Programs from Gemini and Apollo through ISS-era missions have relied on Houston operations.",
+            "source": "NASA"
+          },
+          {
+            "id": 691,
+            "fact": "UT Austin's Texas Advanced Computing Center launched the Frontera supercomputer in 2019.",
+            "category": "Science/Tech",
+            "date": "2019-09-03",
+            "background": "Frontera expanded U.S. academic capacity for advanced computing research.",
+            "source": "University of Texas at Austin / TACC"
+          },
+          {
+            "id": 692,
+            "fact": "At launch, Frontera was described as the fastest supercomputer at any university and ranked No. 5 worldwide.",
+            "category": "Science/Tech",
+            "date": null,
+            "background": "The system achieved top-tier performance on the TOP500 benchmark list.",
+            "source": "University of Texas at Austin / TACC"
+          },
+          {
+            "id": 693,
+            "fact": "Rice University scientists discovered carbon-60 (buckminsterfullerene) in 1985, work that led to the 1996 Nobel Prize in Chemistry.",
+            "category": "Science/Tech",
+            "date": null,
+            "background": "The discovery became a landmark in nanoscience and materials chemistry.",
+            "source": "Rice University"
+          },
+          {
+            "id": 694,
+            "fact": "Article VII of the Texas Constitution is dedicated to education and public free schools.",
+            "category": "Education",
+            "date": null,
+            "background": "The article establishes core constitutional commitments for public education in Texas.",
+            "source": "Texas Constitution, Article VII"
+          },
+          {
+            "id": 695,
+            "fact": "The Texas Permanent School Fund was created in 1854 with a $2 million legislative appropriation.",
+            "category": "Education",
+            "date": "1854-01-01",
+            "background": "The fund was established for the benefit of Texas public schools.",
+            "source": "Texas Education Agency"
+          },
+          {
+            "id": 696,
+            "fact": "Texas A&M opened on October 4, 1876, as the state's first public institution of higher education.",
+            "category": "Education",
+            "date": "1876-10-04",
+            "background": "The school began as the Agricultural and Mechanical College of Texas.",
+            "source": "Texas A&M University"
+          },
+          {
+            "id": 697,
+            "fact": "Texas A&M began instruction with 40 students and six faculty members.",
+            "category": "Education",
+            "date": null,
+            "background": "The university grew from a small founding class into one of the largest campuses in the nation.",
+            "source": "Texas A&M University"
+          },
+          {
+            "id": 698,
+            "fact": "The University of Texas officially opened in 1883.",
+            "category": "Education",
+            "date": "1883-01-01",
+            "background": "UT's launch fulfilled decades of efforts to create a major public university for Texas.",
+            "source": "University of Texas at Austin"
+          },
+          {
+            "id": 699,
+            "fact": "When UT opened, classes started with eight professors and 221 students.",
+            "category": "Education",
+            "date": null,
+            "background": "Early classes were held while the first main campus building was being completed.",
+            "source": "University of Texas at Austin"
+          },
+          {
+            "id": 700,
+            "fact": "Texas A&M was created under the land-grant mission established by the Morrill Act of 1862.",
+            "category": "Education",
+            "date": null,
+            "background": "The act funded colleges focused on agriculture and the mechanical arts.",
+            "source": "Texas A&M University"
+          },
+          {
+            "id": 701,
+            "fact": "In 1963, the Texas Legislature changed the school's name from the Agricultural and Mechanical College of Texas to Texas A&M University.",
+            "category": "Education",
+            "date": "1963-01-01",
+            "background": "The rename reflected the institution's broader academic scope.",
+            "source": "Texas A&M University"
           }
     ]
 

@@ -228,6 +228,7 @@ fun MainScreen(
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .height(50.dp)
+                    .background(MaterialTheme.colorScheme.background)
             ) {
                 BannerAdView()
             }

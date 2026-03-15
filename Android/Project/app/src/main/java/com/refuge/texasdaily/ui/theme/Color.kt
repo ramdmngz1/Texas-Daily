@@ -7,7 +7,7 @@ val AccentGreen = Color(0xFF85A63D)
 val AccentGreenDim = Color(0x4785A63D)
 
 // Light mode
-val LightBackground = Color(0xFFF7F5E6)   // limestone parchment
+val LightBackground = Color(0xFFF5F5DC)   // app icon tan
 val LightCard = Color(0xFFFAFAFA)
 val LightInk = Color(0xFF4D362B)           // pecan brown
 val LightChip = Color(0xFFEBF2E5)

@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.refuge.texasdaily.ui.components
 
 import androidx.compose.foundation.clickable

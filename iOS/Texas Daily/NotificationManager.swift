@@ -88,7 +88,9 @@ final class NotificationManager {
         do {
             try await center.add(request)
         } catch {
+            #if DEBUG
             print("⚠️ Failed to schedule daily fact notification: \(error)")
+            #endif
         }
     }
 

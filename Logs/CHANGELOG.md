@@ -2,7 +2,194 @@
 
 ---
 
+## 2026-03-14
+
+### Security & Bug Fix Pass
+
+#### Security — HIGH (Android)
+
+**H1 — `android:allowBackup` disabled (`AndroidManifest.xml`)**
+- Changed `allowBackup` from `true` → `false`. Prevents app data (DataStore preferences, category selections, notification settings) from being extractable via `adb backup` or Google cloud backup.
+
+**H2 — `BootReceiver` not exported (`AndroidManifest.xml`)**
+- Changed `BootReceiver android:exported` from `true` → `false`. An exported receiver without a permission guard can be triggered by any installed app, allowing arbitrary rescheduling of daily reminder WorkManager tasks.
+
+#### Security — MEDIUM (iOS)
+
+**M1 — Production logging guarded (`BannerAdView.swift`, `NotificationManager.swift`, `TexasDailyApp.swift`)**
+- Wrapped all `print()` calls with `#if DEBUG` guards:
+  - `BannerAdView.swift`: banner loaded log, banner error log (2 call sites)
+  - `NotificationManager.swift`: notification scheduling error log (1 call site)
+  - `TexasDailyApp.swift`: AdMob start/skip logs (2 call sites)
+
+#### Bug Fixes — MEDIUM (Android)
+
+**B1 — `FactRepository.randomFact()` crash on empty category pool fixed (`FactRepository.kt`)**
+- `pool.random()` throws `IndexOutOfBoundsException` when all selected categories are empty or invalid (e.g., stale categories after a content update).
+- Changed return type to `TexasFact?` and replaced `random()` with `randomOrNull()`. `TexasViewModel._currentFact` is already `MutableStateFlow<TexasFact?>`, so callers are unaffected.
+
+**B2 — Unsafe `Activity` cast guarded in `SettingsScreen.kt`**
+- `context as Activity` would throw `ClassCastException` if the context is not an Activity (unlikely but possible in instrumentation or future refactors).
+- Changed to `val activity = context as? Activity ?: return@Button` safe cast with early return.
+
+---
+
+## 2026-03-13 (continued)
+
+### Android — Parity Updates with iOS (UI + Reminder + Ads)
+
+Applied Android counterparts for tonight’s iOS changes.
+
+**`ui/screens/SettingsScreen.kt`**
+- Daily reminder now auto-saves and auto-schedules:
+  - Toggling reminder ON schedules immediately with the currently selected time.
+  - Toggling reminder OFF cancels immediately.
+  - Changing time in the picker re-saves/re-schedules in real time when enabled.
+- Removed manual reminder save UX:
+  - Removed **"Save & Schedule"** button.
+  - Removed transient **"Saved & scheduled."** banner.
+- Added clear persisted-state copy under the picker:
+  - `Reminder is ON. Saved time: HH:MM.`
+  - Styled with darker text (`onBackground` at 90% opacity) for stronger readability.
+
+**`ui/screens/MainScreen.kt`**
+- Bottom banner strip now explicitly uses `MaterialTheme.colorScheme.background` so it matches the top/background shade in both light and dark mode (no second strip tone).
+
+**`MainActivity.kt`**
+- Status bar and navigation bar now track in-app Light/Dark mode immediately.
+- Added `enableEdgeToEdge(...)` updates via `SystemBarStyle` inside a Compose `SideEffect` driven by `isDark`.
+
+**`ui/components/BannerAdView.kt`**
+- Improved AdMob debug behavior and diagnostics:
+  - Uses Google’s Android test banner unit in **debug emulator** builds.
+  - Uses production banner unit otherwise.
+  - Added log output for banner load success/failure with error code/message.
+
+**`ui/screens/OnboardingScreen.kt`**
+- Adjusted text opacity hierarchy to match iOS tuning:
+  - Skip text alpha `0.5` → `0.7`.
+  - Description text alpha `0.65` → `0.72`.
+
+### Consistent Tan Background Color — iOS & Android
+
+Sampled the app icon background pixel color (`#F5F5DC`, RGB 245/245/220) and applied it uniformly across both platforms. Required three rounds of fixes to fully eliminate all background inconsistencies.
+
+**Root cause:** Multiple overlapping background layers — `PaperBackground` (a `LinearGradient` overlay using `Color(.systemBackground)` at 30–35% opacity), duplicate `backgroundColor` fills in `TodayFactView`, and stale `#F7F5E6` values across several files — were each contributing slightly different shades on top of each other.
+
+**iOS**
+- `RootView.swift`: Light-mode `backgroundColor` updated from `#F7F5E6` → `#F5F5DC`.
+- `TodayFactView.swift`: Removed `backgroundColor.ignoresSafeArea()` from the main `body` ZStack entirely — `RootView`'s background is now the single source of truth for the main screen background. Both `backgroundColor` properties in the file also updated to `#F5F5DC`.
+- `PaperBackground.swift`: Updated both `LinearGradient` layers from `Color(.systemBackground)` / `Color(.secondarySystemBackground)` / `Color.white` / `Color(.systemGray6)` to tan-matched values (`#F5F5DC` → `#ECECD1`).
+- `TodayFactView.swift` + `SettingsView.swift`: Removed all three `PaperBackground()` overlay usages (were `opacity(0)` in dark mode and causing a lighter wash in light mode).
+- `SettingsView.swift`: `backgroundColor` light-mode value updated to `#F5F5DC`.
+- `FactShareCard.swift`: `bgColor` updated to `#F5F5DC`.
+
+**Android**
+- `ui/theme/Color.kt`: `LightBackground` updated from `0xFFF7F5E6` → `0xFFF5F5DC`.
+- `res/values/colors.xml`: Added `splash_background` color `#F5F5DC`.
+- `res/values/themes.xml`: Added `Theme.TexasDaily.Splash` (extends `Theme.SplashScreen`) with `windowSplashScreenBackground = @color/splash_background`.
+- `AndroidManifest.xml`: App theme changed to `Theme.TexasDaily.Splash` (sets splash background; transitions to `Theme.TexasDaily` after launch).
+- `gradle/libs.versions.toml` + `app/build.gradle.kts`: Added `androidx.core:core-splashscreen:1.0.1` dependency.
+- `MainActivity.kt`: Added `installSplashScreen()` call before `super.onCreate()`.
+
+---
+
+## 2026-03-13
+
+### iOS — Onboarding Screen (First-Launch)
+
+**`OnboardingView.swift`** *(new)*
+- 4-page swipeable onboarding using `TabView` with `.page` style.
+- Pages: Welcome → 700+ Facts → Browse by Category → Daily Reminders.
+- Animated capsule dot indicators, "Next" / "Get Started" button, and "Skip" link.
+- Styled with accent green and adapts to light/dark mode.
+
+**`TexasAppViewModel.swift`**
+- Added `onboardingDoneKey` UserDefaults key.
+- Added `onboardingDone: Bool` `@Published` property loaded from UserDefaults on init.
+- Added `completeOnboarding()` — sets flag to `true` in memory and UserDefaults.
+
+**`RootView.swift`**
+- Checks `viewModel.onboardingDone`; shows `OnboardingView` on first launch, then routes to main app permanently.
+- Extracted existing main content into a `mainContent` computed property for clean branching.
+
+### Android — Onboarding Screen (First-Launch)
+
+**`ui/screens/OnboardingScreen.kt`** *(new)*
+- 4-page swipeable onboarding flow using `HorizontalPager` (Compose foundation — no new dependency).
+- Pages: Welcome → 700+ Facts → Browse by Category → Daily Reminders.
+- Animated pill-shaped dot indicators, "Next" / "Get Started" button, and "Skip" link.
+- Styled with `AccentGreen` and existing Material3 theme.
+
+**`viewmodel/TexasViewModel.kt`**
+- Added `KEY_ONBOARDING_DONE` DataStore key.
+- Added `onboardingDone: StateFlow<Boolean>` read from DataStore on init.
+- Added `completeOnboarding()` — sets flag to `true` in memory and DataStore; called once by the user.
+
+**`MainActivity.kt`**
+- Observes `onboardingDone` state; routes to `OnboardingScreen` on first launch, then to the main app permanently.
+
+### Content — Accuracy Review of 101 New Facts (IDs 601–701, iOS & Android)
+
+All 101 new facts reviewed. 100 of 101 confirmed accurate. One correction applied:
+
+**ID 667 — Bessie Coleman pilot's license (CORRECTED)**
+- Old: "...became the first American to earn an international pilot's license." — Misleadingly broad; American men had international licenses before 1921.
+- New: "...became the first Black American and first American woman to earn an international pilot's license."
+- Applied to both Android and iOS `texas_facts.json`.
+
+### Content — Added 101 Verified Facts (iOS & Android)
+
+- Added 101 new Texas facts across all 11 categories in 11 batches (10 facts per batch, final batch of 1).
+- Appended IDs `601` through `701` to both:
+  - `iOS/Texas Daily/texas_facts.json`
+  - `Android/Project/app/src/main/res/raw/texas_facts.json`
+- New facts were distributed across categories as follows:
+  - History (+10), Geography (+10), Culture (+10), Sports (+10)
+  - Government (+9), Economy (+9), People (+9), Nature (+9), Infrastructure (+9)
+  - Science/Tech (+8), Education (+8)
+- Post-update validation:
+  - Both JSON files valid and synchronized on all added IDs.
+  - Each file now contains 700 facts (ID range `1`–`701`, with `379` intentionally absent).
+
+### Content — Fact Removed (iOS & Android)
+
+**ID 379 — Pickup truck decoration fact (REMOVED)**
+- Removed from both `texas_facts.json` files (Android & iOS).
+- Reason: unverifiable and anecdotal — not a factual statement about Texas history or culture.
+- Both files remain valid JSON with 599 facts each.
+
+### Content — Fact Accuracy Corrections (iOS & Android)
+
+All corrections applied to both `iOS/Texas Daily/texas_facts.json` and `Android/Project/app/src/main/res/raw/texas_facts.json`.
+
+**ID 43 — Texas flag height myth (CORRECTED)**
+- Old: "The Texas flag is the only state flag allowed to fly at the same height as the U.S. flag on separate poles." — This is a well-documented myth; all 50 state flags may fly at equal height on separate poles.
+- New: "Texas law allows the state flag to fly at the same height as the U.S. flag on a separate pole, reflecting its history as an independent republic."
+
+**ID 46 — Desert regions (CORRECTED)**
+- Old: "Texas has four major desert regions touching or within its borders." (cited Sonoran, Mojave, Chihuahuan, Great Plains) — The Sonoran and Mojave deserts do not reach Texas.
+- New: "The Chihuahuan Desert, the largest desert in North America, extends deep into West Texas."
+
+**ID 57 — First word from the Moon (CORRECTED)**
+- Old: "The first word spoken from the Moon to Mission Control in Houston was 'Houston.'" — Factually incorrect; the first words from the surface were Buzz Aldrin's "Contact light."
+- New: Rewritten to focus on the iconic Armstrong transmission without the inaccurate "first word" claim.
+
+**ID 419 (iOS only) — Duplicate Moon fact (CORRECTED)**
+- Same inaccuracy as ID 57, found in a second entry in the iOS JSON. Rewritten to the accurate transmission framing.
+
+---
+
 ## 2026-03-11
+
+### Android — Stability Pass
+
+**`gradle/libs.versions.toml`**
+- Synced `agp` from `9.0.0` → `9.0.1` to match CJIS Daily and pick up AGP patch fixes.
+- Updated `coroutines` from `1.8.1` → `1.9.0` for Kotlin 2.2.x compatibility.
+
+**`billing/BillingManager.kt`**
+- Fixed compile error: `enablePendingPurchases()` (no-arg overload) was removed in Play Billing Library 7.0. Replaced with `enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())`. Added `PendingPurchasesParams` import.
 
 ### Android — AdMob IDs + Manifest Cleanup + Play Console Setup
 

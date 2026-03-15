@@ -14,8 +14,18 @@ import UIKit
 
 struct BannerAdView: UIViewRepresentable {
 
-    /// ✅ Replace with your real AdMob Banner Ad Unit ID (NOT the test ID)
-    private let adUnitID = "ca-app-pub-2130345513930124/4850016311"
+    /// Use Google's test unit on simulator/debug for reliable ad loading.
+    private var adUnitID: String {
+#if DEBUG
+#if targetEnvironment(simulator)
+        return "ca-app-pub-3940256099942544/2435281174"
+#else
+        return "ca-app-pub-2130345513930124/4850016311"
+#endif
+#else
+        return "ca-app-pub-2130345513930124/4850016311"
+#endif
+    }
 
     func makeUIView(context: Context) -> BannerView {
         let banner = BannerView(adSize: AdSizeBanner)
@@ -44,8 +54,16 @@ struct BannerAdView: UIViewRepresentable {
                 .rootViewController
         }
 
-        func bannerViewDidReceiveAd(_ bannerView: BannerView) { }
+        func bannerViewDidReceiveAd(_ bannerView: BannerView) {
+            #if DEBUG
+            print("✅ Banner ad loaded (\(bannerView.adUnitID ?? "unknown ad unit")).")
+            #endif
+        }
 
-        func bannerView(_ bannerView: BannerView, didFailToReceiveAdWithError error: Error) { }
+        func bannerView(_ bannerView: BannerView, didFailToReceiveAdWithError error: Error) {
+            #if DEBUG
+            print("⚠️ Banner failed to load: \(error.localizedDescription)")
+            #endif
+        }
     }
 }

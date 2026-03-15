@@ -9,11 +9,11 @@ import SwiftUI
 struct PaperBackground: View {
     var body: some View {
         ZStack {
-            // Base background
+            // Base background — matches app icon tan #F5F5DC
             LinearGradient(
                 gradient: Gradient(colors: [
-                    Color(.systemBackground),
-                    Color(.secondarySystemBackground)
+                    Color(red: 0.961, green: 0.961, blue: 0.863),
+                    Color(red: 0.925, green: 0.925, blue: 0.820)
                 ]),
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
@@ -24,8 +24,8 @@ struct PaperBackground: View {
                 .fill(
                     LinearGradient(
                         gradient: Gradient(colors: [
-                            Color.white,
-                            Color(.systemGray6)
+                            Color(red: 0.961, green: 0.961, blue: 0.863),
+                            Color(red: 0.925, green: 0.925, blue: 0.820)
                         ]),
                         startPoint: .top,
                         endPoint: .bottom

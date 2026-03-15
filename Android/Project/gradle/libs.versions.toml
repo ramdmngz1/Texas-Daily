@@ -1,5 +1,5 @@
 [versions]
-agp = "9.0.0"
+agp = "9.0.1"
 kotlin = "2.2.10"
 coreKtx = "1.13.1"
 lifecycleRuntimeKtx = "2.8.6"
@@ -10,7 +10,8 @@ googleMobileAds = "23.5.0"
 billingKtx = "7.1.1"
 gson = "2.11.0"
 datastorePreferences = "1.1.1"
-coroutines = "1.8.1"
+coroutines = "1.9.0"
+splashscreen = "1.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -30,6 +31,7 @@ billing-ktx = { group = "com.android.billingclient", name = "billing-ktx", versi
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

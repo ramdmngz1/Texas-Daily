@@ -1,6 +1,9 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.refuge.texasdaily.ui.screens
 
 import android.app.Activity
+import android.text.format.DateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,6 +25,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,6 +51,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.refuge.texasdaily.ui.theme.AccentGreen
 import com.refuge.texasdaily.viewmodel.TexasViewModel
+import java.util.Calendar
 
 @Composable
 fun SettingsScreen(
@@ -66,9 +71,13 @@ fun SettingsScreen(
         initialHour = reminderHour,
         initialMinute = reminderMinute
     )
-    var savedBanner by remember { mutableStateOf(false) }
 
     LaunchedEffect(reminderEnabled) { localReminderEnabled = reminderEnabled }
+    LaunchedEffect(localReminderEnabled, timePickerState.hour, timePickerState.minute) {
+        if (localReminderEnabled) {
+            viewModel.saveReminder(true, timePickerState.hour, timePickerState.minute)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -145,7 +154,10 @@ fun SettingsScreen(
                         Text("Daily Reminder", style = MaterialTheme.typography.labelLarge, modifier = Modifier.weight(1f))
                         Switch(
                             checked = localReminderEnabled,
-                            onCheckedChange = { localReminderEnabled = it },
+                            onCheckedChange = {
+                                localReminderEnabled = it
+                                viewModel.saveReminder(it, timePickerState.hour, timePickerState.minute)
+                            },
                             colors = SwitchDefaults.colors(checkedThumbColor = AccentGreen, checkedTrackColor = AccentGreen.copy(alpha = 0.4f))
                         )
                     }
@@ -159,30 +171,22 @@ fun SettingsScreen(
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         )
                         Spacer(Modifier.height(8.dp))
-                        Button(
-                            onClick = {
-                                viewModel.saveReminder(true, timePickerState.hour, timePickerState.minute)
-                                savedBanner = true
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = AccentGreen),
-                            shape = RoundedCornerShape(12.dp),
-                            modifier = Modifier.fillMaxWidth()
+                        val savedTime = formatTime(context, timePickerState.hour, timePickerState.minute)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("Save & Schedule", color = Color.White)
-                        }
-                        if (savedBanner) {
-                            Text(
-                                "Saved & scheduled.",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = AccentGreen,
-                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            Icon(
+                                imageVector = Icons.Default.Notifications,
+                                contentDescription = null,
+                                tint = AccentGreen,
+                                modifier = Modifier.padding(end = 8.dp)
                             )
-                        }
-                    } else {
-                        LaunchedEffect(localReminderEnabled) {
-                            if (!localReminderEnabled && reminderEnabled) {
-                                viewModel.saveReminder(false, timePickerState.hour, timePickerState.minute)
-                            }
+                            Text(
+                                "Reminder is ON. Saved time: $savedTime.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.9f)
+                            )
                         }
                     }
                 }
@@ -196,7 +200,8 @@ fun SettingsScreen(
                         HorizontalDivider()
                         Button(
                             onClick = {
-                                viewModel.billingManager.purchaseRemoveAds(context as Activity)
+                                val activity = context as? Activity ?: return@Button
+                            viewModel.billingManager.purchaseRemoveAds(activity)
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = AccentGreen),
                             shape = RoundedCornerShape(12.dp),
@@ -256,4 +261,14 @@ private fun SettingsCard(content: @Composable () -> Unit) {
             content()
         }
     }
+}
+
+private fun formatTime(context: android.content.Context, hour: Int, minute: Int): String {
+    val cal = Calendar.getInstance().apply {
+        set(Calendar.HOUR_OF_DAY, hour)
+        set(Calendar.MINUTE, minute)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }
+    return DateFormat.getTimeFormat(context).format(cal.time)
 }
