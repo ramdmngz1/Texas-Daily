@@ -10,6 +10,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.refuge.texasdaily.R
+import com.refuge.texasdaily.data.FactRepository
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
@@ -37,10 +38,13 @@ class DailyReminderWorker(
         }
         notificationManager.createNotificationChannel(channel)
 
+        val fact = FactRepository(context).randomFact(emptySet())
+        val notificationBody = fact?.fact ?: context.getString(R.string.notification_body)
+
         val notification = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setContentTitle(context.getString(R.string.notification_title))
-            .setContentText(context.getString(R.string.notification_body))
+            .setContentText(notificationBody)
             .setAutoCancel(true)
             .build()
 

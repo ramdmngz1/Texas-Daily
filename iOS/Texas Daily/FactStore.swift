@@ -27,10 +27,14 @@ final class FactStore {
             let data = try Data(contentsOf: url)
             let decoded = try JSONDecoder().decode(Wrapper.self, from: data)
             self.facts = decoded.facts
+            #if DEBUG
             print("✅ Loaded \(decoded.facts.count) facts")
+            #endif
         } catch {
             self.facts = []
+            #if DEBUG
             print("⚠️ Failed to load texas_facts.json: \(error)")
+            #endif
         }
     }
 

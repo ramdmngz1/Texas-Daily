@@ -2,6 +2,46 @@
 
 ---
 
+## 2026-03-18
+
+### Code Quality — Android
+
+#### Bug Fix — Unguarded Log Statements in Release Builds (`BannerAdView.kt`)
+
+Mirrored the iOS `FactStore.swift` `#if DEBUG` fix. Two `Log` calls in the AdMob banner ad listener were firing in release builds, leaking internal ad unit IDs and error details to device logs:
+
+- `onAdLoaded()`: `Log.d(TAG, "Banner loaded: $adUnitId")` → wrapped in `if (BuildConfig.DEBUG)`
+- `onAdFailedToLoad()`: `Log.w(TAG, "Banner failed: ...")` → wrapped in `if (BuildConfig.DEBUG)`
+
+Both calls are now suppressed in release builds.
+
+---
+
+## 2026-03-17
+
+### Feature — Dynamic Facts in Daily Push Notifications (iOS & Android)
+
+#### iOS (`NotificationManager.swift`)
+
+**`cancelDailyFactNotification()`**
+- Updated to fetch all pending notifications and remove any with the `dailyTexasFact_` identifier prefix, replacing the previous single hardcoded identifier `"dailyTexasFact"`.
+
+**`scheduleDailyFactNotification(at:)`**
+- Replaced single repeating notification (static body: "Tap to read today's Texas fact.") with a batch of up to 60 one-time daily notifications.
+- Each notification is scheduled for a specific calendar date+time (`repeats: false`) across the next 60 days.
+- Each notification picks a unique random fact from `FactStore.shared`, passing the previous fact's ID to avoid back-to-back repeats.
+- Notification identifiers use the format `dailyTexasFact_0` through `dailyTexasFact_59`.
+- Notifications already in the past (e.g., today's slot if the scheduled time has passed) are skipped automatically.
+- Existing reschedule triggers in `TexasAppViewModel` (app launch, time change, toggle) keep the 60-day batch current.
+
+#### Android (`DailyReminderWorker.kt`)
+
+- Added `FactRepository` import.
+- `showNotification()` now instantiates `FactRepository(context)` and calls `randomFact(emptySet())` at worker execution time (i.e., when the notification fires), replacing the static string resource body.
+- Falls back to `R.string.notification_body` if the repository returns null.
+
+---
+
 ## 2026-03-14
 
 ### Security & Bug Fix Pass

@@ -37,11 +37,11 @@ fun BannerAdView() {
                 this.adUnitId = adUnitId
                 adListener = object : AdListener() {
                     override fun onAdLoaded() {
-                        Log.d(TAG, "Banner loaded: $adUnitId")
+                        if (BuildConfig.DEBUG) Log.d(TAG, "Banner loaded: $adUnitId")
                     }
 
                     override fun onAdFailedToLoad(error: LoadAdError) {
-                        Log.w(TAG, "Banner failed: code=${error.code} message=${error.message}")
+                        if (BuildConfig.DEBUG) Log.w(TAG, "Banner failed: code=${error.code} message=${error.message}")
                     }
                 }
                 loadAd(AdRequest.Builder().build())
