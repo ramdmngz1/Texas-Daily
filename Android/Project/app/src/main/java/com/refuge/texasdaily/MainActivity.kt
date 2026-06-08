@@ -13,7 +13,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
             val onboardingDone by vm.onboardingDone.collectAsState()
             var showSettings by remember { mutableStateOf(false) }
 
-            SideEffect {
+            LaunchedEffect(isDark) {
                 enableEdgeToEdge(
                     statusBarStyle = if (isDark) {
                         SystemBarStyle.dark(AndroidColor.TRANSPARENT)

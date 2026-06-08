@@ -4,24 +4,48 @@ import android.content.Context
 import com.google.gson.Gson
 import com.refuge.texasdaily.R
 
-class FactRepository(private val context: Context) {
+class FactRepository private constructor(context: Context) {
+
+    private val appContext: Context = context.applicationContext
 
     private val allFacts: List<TexasFact> by lazy {
-        val json = context.resources.openRawResource(R.raw.texas_facts)
+        val json = appContext.resources.openRawResource(R.raw.texas_facts)
             .bufferedReader()
             .use { it.readText() }
         Gson().fromJson(json, FactsWrapper::class.java).facts
     }
 
-    fun getCategories(): List<String> =
-        allFacts.map { it.category }.distinct().sorted()
+    private val categoryIndex: Map<String, List<TexasFact>> by lazy {
+        allFacts.groupBy { it.category }
+    }
 
-    fun randomFact(selectedCategories: Set<String>): TexasFact? {
+    fun getCategories(): List<String> =
+        categoryIndex.keys.sorted()
+
+    fun randomFact(selectedCategories: Set<String>, excludingId: Int? = null): TexasFact? {
         val pool = if (selectedCategories.isEmpty()) {
             allFacts
         } else {
-            allFacts.filter { it.category in selectedCategories }
+            selectedCategories.flatMap { categoryIndex[it].orEmpty() }
         }
-        return pool.randomOrNull()
+        if (pool.isEmpty()) return null
+
+        if (excludingId != null) {
+            val filtered = pool.filter { it.id != excludingId }
+            if (filtered.isNotEmpty()) return filtered.random()
+        }
+
+        return pool.random()
+    }
+
+    companion object {
+        @Volatile
+        private var instance: FactRepository? = null
+
+        fun getInstance(context: Context): FactRepository {
+            return instance ?: synchronized(this) {
+                instance ?: FactRepository(context.applicationContext).also { instance = it }
+            }
+        }
     }
 }

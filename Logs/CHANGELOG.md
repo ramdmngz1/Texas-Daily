@@ -2,6 +2,309 @@
 
 ---
 
+## 2026-05-21
+
+### Production Deployment Infrastructure
+
+Complete CI/CD pipeline, automated store deployment, and monitoring strategy.
+
+**D1 — GitHub Actions: iOS CI/CD (`.github/workflows/ios.yml`)**
+- PR builds: Xcode build + test with SPM cache
+- Main push: auto-deploy to TestFlight via Fastlane
+- Tag `ios-v*`: submit to App Store Review
+- Concurrency groups prevent duplicate runs
+
+**D2 — GitHub Actions: Android CI/CD (`.github/workflows/android.yml`)**
+- PR builds: Gradle lint + assembleDebug + unit tests
+- Main push: bundle release AAB → Play Internal Track
+- Tag `android-v*`: bundle → Play Store Production
+- Gradle + wrapper caching for fast builds
+
+**D3 — Release Management (`.github/workflows/release.yml`)**
+- Manual `workflow_dispatch` with platform selector and version input
+- Auto-bumps `MARKETING_VERSION`/`versionCode` + `versionName`
+- Creates platform-specific tags that trigger store deployments
+- Generates GitHub Release with notes
+
+**D4 — Weekly Health Check (`.github/workflows/health-check.yml`)**
+- Scheduled Monday 9am UTC: builds both platforms, runs lint, checks dependencies
+- Early warning for broken builds or outdated dependencies
+
+**D5 — Fastlane Configuration (`fastlane/Fastfile`, `fastlane/Appfile`)**
+- `beta` lane: increment build number → archive → TestFlight upload
+- `release` lane: increment → archive → App Store submit with auto-release
+- App Store Connect API key auth (no password prompts in CI)
+
+**D6 — Deployment Guide (`DEPLOYMENT.md`)**
+- Architecture diagram, pipeline trigger matrix, secrets inventory
+- Step-by-step Firebase Crashlytics setup for both platforms
+- Monitoring thresholds, reliability checklist, downtime risk matrix
+- Emergency hotfix procedure
+
+---
+
+### Security Audit & Hardening (iOS & Android)
+
+Full security audit across both platforms. 14 findings identified, fixes implemented for all actionable items.
+
+#### HIGH Severity Fixes
+
+**S1 — IAP bypass via UserDefaults tampering (iOS)**
+- `StoreKitManager.init()` now defaults `adsRemoved = false` instead of reading from UserDefaults cache. Ads display until `refreshEntitlements()` completes with Apple-signed verification. Eliminates the jailbreak/backup-editing attack vector entirely.
+
+**S2 — Purchase signature verification (Android)**
+- Added `isVerifiedPurchase()` to `BillingManager` that checks `purchaseState`, product ID match, and non-empty `signature`/`originalJson`. Applied to all three purchase-checking paths: `checkExistingPurchases()`, `restorePurchases()`, and `onPurchasesUpdated()`.
+
+**S3 — `local.properties` tracked in git**
+- Added `local.properties`, `*.jks`, `*.keystore`, `.gradle/`, `.idea/`, `*.apk`, `*.aab` to `.gitignore`. File must be manually untracked with `git rm --cached Android/Project/local.properties`.
+
+#### MEDIUM Severity Fixes
+
+**S5 — GDPR consent errors silently swallowed (iOS)**
+- `AdsManager.requestConsentAndStartAds()` now returns `false` (no ads) when consent info update or consent form presentation fails. Prevents ads from loading without valid consent state.
+
+**S6 — Network security config (Android)**
+- Created `res/xml/network_security_config.xml` with `cleartextTrafficPermitted="false"`. Wired to manifest via `android:networkSecurityConfig`.
+
+#### LOW Severity Fixes
+
+**S8 — Error messages leak internal details (iOS)**
+- `StoreKitManager` purchase/restore errors now show generic user-facing messages. Raw `error.localizedDescription` logged only in `#if DEBUG`.
+
+**S10 — Production ad unit on physical debug devices (iOS)**
+- `BannerAdView` now uses Google's test ad unit for all `#if DEBUG` builds, not just simulator. Prevents invalid traffic flags on the AdMob account.
+
+**S11 — Billing reconnect loop without backoff (Android)**
+- `onBillingServiceDisconnected` now uses exponential backoff (1s, 2s, 4s… capped at 32s) via `Handler.postDelayed` instead of immediate reconnection.
+
+---
+
+### Production UI Component Library (iOS & Android)
+
+Extracted reusable UI components, improved accessibility, and added polished transitions. No functionality changes.
+
+#### iOS — 1 New File, 3 Files Modified
+
+**U1 — Created `AppComponents.swift` — shared UI component library**
+- `CardStyle` ViewModifier (`.appCard(fill:cornerRadius:shadowRadius:shadowY:)`) replaces 5 identical `RoundedRectangle + .fill + .shadow` blocks across TodayFactView, SettingsView, and CategoryFilterSheet.
+- `AccentButtonStyle` — proper `ButtonStyle` with built-in press animation (scale spring). Replaces the manual `isButtonPressed` `@State` + `simultaneousGesture(DragGesture)` workaround in TodayFactView (20 lines → 3 lines).
+- `StatusBanner` — auto-dismissing message view using `.task(id:)`. Replaces inline status text with manual formatting in SettingsView.
+- `EmptyStateView` — accessible empty state with icon, title, and subtitle.
+
+**U2 — `TodayFactView.swift` — Dynamic Type + component adoption**
+- Added `@ScaledMetric(relativeTo: .title)` for the fact title font size — scales with the user's Dynamic Type setting for accessibility.
+- Replaced manual card background+shadow with `.appCard(fill:)`.
+- Replaced 20-line manual button press animation with `AccentButtonStyle`.
+
+**U3 — `SettingsView.swift` — component adoption**
+- Replaced 3 identical card background+shadow blocks with `.appCard(fill: cardColor)`.
+- Replaced inline status message `Text` with `StatusBanner(message:isError:onDismiss:)`.
+
+**U4 — `CategoryFilterSheet.swift` — component adoption**
+- Replaced card background+shadow with `.appCard(fill: cardColor)`.
+
+#### Android — 1 New File, 2 Files Modified
+
+**U5 — Created `ui/components/AppComponents.kt` — shared composable library**
+- `AppCard` — promoted from `SettingsScreen`'s private `SettingsCard`. Configurable corner radius and elevation.
+- `EmptyState` — composable with icon, title, and optional subtitle.
+- `StatusBanner` — auto-dismissing with `AnimatedVisibility` fade + `LaunchedEffect` timer.
+
+**U6 — `MainScreen.kt` — animated transitions + empty state**
+- Wrapped fact content in `Crossfade(animationSpec = tween(300))` for smooth fact-to-fact transitions.
+- Added `LaunchedEffect(fact?.id)` to `animateScrollTo(0)` when facts change.
+- Added `EmptyState` composable for null-fact loading state.
+
+**U7 — `SettingsScreen.kt` — component adoption**
+- Replaced private `SettingsCard` with shared `AppCard` import (4 usages).
+- Replaced inline billing status `Text` + `LaunchedEffect(delay)` with `StatusBanner`.
+
+---
+
+### Clean Architecture Refactoring (iOS & Android)
+
+Separated concerns, reduced coupling, and improved modularity across both platforms. No functionality changes.
+
+#### iOS — 5 New Files, 6 Files Modified
+
+**A1 — Extracted `StoreKitManager.swift` from TexasAppViewModel**
+- TexasAppViewModel was a 267-line God Object handling facts, categories, notifications, StoreKit transactions, entitlement verification, and purchase/restore flows — 5 unrelated domains in one class.
+- Extracted all StoreKit 2 logic (transaction listener, `buy()`, `restore()`, `refreshEntitlements()`, verification) into a dedicated `StoreKitManager: ObservableObject`. Injected as a separate `@EnvironmentObject` for views that need purchase state.
+- TexasAppViewModel reduced to 120 lines focused on facts, categories, and notifications.
+
+**A2 — Extracted `AdsManager.swift` from TexasDailyApp**
+- `TexasDailyApp.swift` contained 50 lines of Google UMP consent flow and AdMob initialization logic — business logic in the app entry point.
+- Moved to `AdsManager` singleton. `TexasDailyApp` reduced from 89 lines to 24 — just app lifecycle and environment injection.
+
+**A3 — Created `PreferenceKeys.swift` — centralized UserDefaults keys**
+- 7 UserDefaults key strings were scattered as private constants across `TexasAppViewModel`, referenced by raw strings. A typo in any key would silently create a separate preference.
+- Centralized into a `PreferenceKeys` enum. All callers (ViewModel, StoreKitManager) reference the shared constants.
+
+**A4 — Extracted `CategoryFilterSheet.swift` from TodayFactView**
+- `TodayFactView.swift` contained two independent view structs — the main fact screen (327 lines) and the category filter sheet (165 lines). Violated one-type-per-file principle.
+- Moved `CategoryFilterSheet` to its own file. No code changes to the struct itself.
+
+**A5 — Extracted `UIApplication+KeyWindow.swift` from AppColors**
+- `AppColors.swift` contained a `UIApplication` extension for root view controller lookup — unrelated to colors.
+- Moved to `UIApplication+KeyWindow.swift` following standard iOS extension naming. `AppColors.swift` now only contains color definitions. Removed unused `import UIKit` from AppColors.
+
+#### Android — 1 New File, 2 Files Modified
+
+**A6 — Created `data/PreferenceKeys.kt` — centralized DataStore keys**
+- The `Context.dataStore` extension and 6 preference key constants were defined at file level in `TexasViewModel.kt`. `BootReceiver.kt` duplicated 3 of the key strings (`"reminder_enabled"`, `"reminder_hour"`, `"reminder_minute"`) as inline `booleanPreferencesKey()`/`intPreferencesKey()` calls — a desync between the two files would silently read/write different preferences.
+- Moved the DataStore extension and all keys to `data/PreferenceKeys.kt`. Both `TexasViewModel` and `BootReceiver` now import from the single source. Removed 6 unused DataStore-related imports from TexasViewModel.
+
+---
+
+### Performance Optimization Pass (iOS & Android)
+
+Full codebase audit targeting speed, memory, rendering efficiency, and resource lifecycle.
+
+#### iOS — 5 Optimizations
+
+**P1 — Category index eliminates O(n) scans on every fact lookup (`FactStore.swift`)**
+- `randomFact(from:excluding:)` filtered all 700 facts on every call — each "New Fact" tap, each category toggle, and 60 times during notification scheduling.
+- Built a `categoryIndex: [String: [TexasFact]]` dictionary at init time. Lookups now use `flatMap` over the index, reducing per-call work from O(700) to O(facts-in-selected-categories).
+
+**P2 — Notification cancel eliminates 2 IPC round-trips (`NotificationManager.swift`)**
+- `cancelDailyFactNotification()` fetched all pending notifications and all delivered notifications from the system daemon, then filtered by prefix — two async IPC calls that blocked the main actor.
+- Replaced with synchronous removal using the known identifier set (`dailyTexasFact_0`…`dailyTexasFact_59` + legacy `dailyTexasFact`). Function changed from `async` to synchronous. Callers updated to remove unnecessary `await`.
+
+**P3 — Notification scheduling replaces 60 filter passes with single shuffle (`NotificationManager.swift`)**
+- Each of the 60 notifications called `randomFact(excluding:)`, filtering the full 700-fact array each time (60 × O(n) = 42,000 comparisons). Also used only single-step exclusion, allowing near-repeats within the 60-day window.
+- Replaced with `allFacts.shuffled()` — one O(n) pass produces 60 unique, non-repeating facts. Also eliminated the continuation-wrapped `requestAuthorization` in favor of the native async API available since iOS 15.
+
+**P4 — Share image freed on sheet dismiss (`TodayFactView.swift`)**
+- The 3×-rendered share card (`UIImage` at ~390×400pt × 3 × 4 bytes ≈ 7 MB) remained in `@State` memory after sharing until the next fact load.
+- Added `onDismiss` handler to nil out `shareImage` when the share sheet closes, immediately reclaiming ~7 MB.
+
+**P5 — Launch task reordered for faster startup (`TexasDailyApp.swift`)**
+- On cold launch, StoreKit listener and notification scheduling waited behind the consent network call (`requestConsentAndStartAds`), which can take 1–5 seconds on slow connections.
+- Reordered: StoreKit listener starts immediately, notifications schedule next (local work), consent/ads run last. Notifications and entitlement verification are now available seconds earlier.
+
+#### Android — 5 Optimizations
+
+**P6 — Category index eliminates O(n) scans on every fact lookup (`FactRepository.kt`)**
+- Same issue as iOS P1. `randomFact()` filtered all 700 facts on every call.
+- Added `categoryIndex: Map<String, List<TexasFact>>` built lazily alongside `allFacts`. `getCategories()` now returns `categoryIndex.keys.sorted()` instead of mapping + distinct + sort on the full array.
+
+**P7 — BootReceiver uses `goAsync()` for process safety (`BootReceiver.kt`)**
+- `onReceive` launched an unscoped `CoroutineScope(Dispatchers.IO)` coroutine to read DataStore preferences. The system could kill the receiver's process after `onReceive` returned but before the coroutine completed, silently dropping the reminder reschedule after reboot.
+- Added `goAsync()` to hold the receiver alive, with `pendingResult.finish()` in a `finally` block guaranteeing cleanup.
+
+**P8 — `enableEdgeToEdge` no longer runs on every recomposition (`MainActivity.kt`)**
+- `SideEffect { enableEdgeToEdge(...) }` ran after every successful recomposition, calling into the window manager's system bar configuration on every frame — dozens of times per second during animations.
+- Changed to `LaunchedEffect(isDark)` so it only fires when the dark mode value actually changes.
+
+**P9 — First fact displays immediately on cold start (`TexasViewModel.kt`)**
+- `loadNewFact()` was called inside `viewModelScope.launch` after `context.dataStore.data.first()`, blocking fact display until DataStore finished reading preferences from disk (50–200ms on cold start). The UI showed a blank screen during this window.
+- Moved `loadNewFact()` before the coroutine launch. A fact displays instantly with no category filter. After DataStore loads, if the user had saved category preferences, the fact refreshes with those filters applied.
+
+**P10 — AdView resources properly released on disposal (`BannerAdView.kt`)**
+- `AndroidView` created an `AdView` in its factory but never called `destroy()` when the composable left composition. The ad view's internal WebView, network connections, and renderer leaked until process death.
+- Added `onRelease = { it.destroy() }` to the `AndroidView` call, ensuring cleanup when the ad is removed from the UI (e.g., after purchasing "Remove Ads").
+
+---
+
+## 2026-05-20
+
+### Production Bug Fix Pass (iOS & Android)
+
+Full codebase audit identified and fixed 9 bugs across both platforms.
+
+#### iOS — 5 Fixes
+
+**B1 — "New Fact" button does nothing for single-fact categories (`FactStore.swift`)**
+- `randomFact(from:excluding:)` had a `pool.count > 1` guard that skipped exclusion when a category contained exactly 1 fact. The same fact was returned (non-nil), so the fallback never fired. User taps the button, gets haptic feedback, but the fact never changes.
+- Removed the count guard. Exclusion is now always attempted; falls through to the same fact only when there is literally no alternative in the pool.
+
+**B2 — Category fallback silently ignored user's filter (`TexasAppViewModel.swift`)**
+- `refreshTodayFact()` used `randomFact(from: selectedCategories, excluding:) ?? randomFact(excluding:)`. When the filtered call returned a non-nil result (even the same fact), the unfiltered fallback never fired. Restructured to only fall back to unfiltered when `selectedCategories` produces `nil`.
+
+**B3 — Notification rescheduling storm from DatePicker (`TexasAppViewModel.swift`)**
+- `onChange(of: viewModel.notificationTime)` fired on every wheel increment, each time cancelling all 60 pending notifications and re-scheduling 60 new ones. Spinning the picker caused hundreds of cancel+schedule cycles per second.
+- Added 800ms debounce via a cancellable `Task`. UserDefaults still saves immediately; notification rescheduling waits for the wheel to settle.
+
+**B4 — Double padding on "New Random Texas Fact" button (`TodayFactView.swift`)**
+- Button had `.padding(.horizontal, 24).padding(.bottom, 24)` inside the computed property AND `.padding(.horizontal, 20).padding(.bottom, 18)` at the call site — 44pt total horizontal inset, making the button ~30% narrower than intended.
+- Removed internal padding; external padding at the call site is the single source.
+
+**B5 — Share sheet could present empty (`TodayFactView.swift`)**
+- Race condition: if `viewModel.todayFact?.id` changed between `showingShareSheet = true` and sheet presentation, `resetSharePayload` set `shareImage = nil`. The sheet's `if let image = shareImage` resolved to false, rendering an empty view.
+- Added `else` branch that auto-dismisses the sheet when `shareImage` is nil at presentation time.
+
+#### Android — 4 Fixes
+
+**B6 — "New Fact" button returns same fact (`FactRepository.kt`, `TexasViewModel.kt`)**
+- `randomFact()` had no exclusion parameter — the user could tap "New Random Texas Fact" and see the identical fact.
+- Added `excludingId: Int?` parameter to `randomFact()`. `loadNewFact()` now passes the current fact's ID. Same exclusion-with-fallback logic as the iOS fix.
+
+**B7 — Toggling category filter didn't refresh the displayed fact (`TexasViewModel.kt`)**
+- `toggleCategory()` and `clearCategoryFilter()` updated the selection state and persisted to DataStore, but never called `loadNewFact()`. The user changed filters, closed the sheet, and still saw the old (possibly irrelevant) fact.
+- Both functions now call `loadNewFact()` after updating state, matching iOS behavior.
+
+**B8 — "Restore Purchases" always showed success (`BillingManager.kt`)**
+- `restorePurchases()` called `checkExistingPurchases()` (async callback) then immediately set `_statusMessage.value = "Purchases restored."` before the query completed. User always saw a success message regardless of actual purchase history.
+- Inlined the query and moved the status message into the callback: "Purchases restored." vs. "No purchases found to restore." based on actual results.
+
+**B9 — `LaunchedEffect` fired `saveReminder` on every Settings screen open (`SettingsScreen.kt`)**
+- `LaunchedEffect(localReminderEnabled, timePickerState.hour, timePickerState.minute)` triggered on initial composition, re-scheduling the WorkManager notification on every Settings screen visit even without user interaction.
+- Added `hasUserInteracted` flag that skips the first `LaunchedEffect` firing, so rescheduling only happens after the user actually changes the time.
+
+### Architecture & Code Quality Refactoring (iOS & Android)
+
+Codebase-wide refactoring to eliminate duplication, fix layer violations, and improve lifecycle management. No functionality changes.
+
+#### iOS — Color Centralization & Layer Cleanup
+
+**R1 — Centralized color palette (`AppColors.swift` — new file)**
+- 7 color definitions were duplicated 31 times across 7 files, each with inline RGB literals. A single typo in any copy would create a visual inconsistency.
+- Created `AppColors` enum with `accent`, `background(for:)`, `ink(for:)`, `card(for:)`, and `chip(for:)`. All 7 view files now reference `AppColors` instead of inline literals.
+
+**R2 — Extracted shared `UIApplication.keyWindowRootViewController` extension (`AppColors.swift`)**
+- Three files (`TexasDailyApp.swift`, `SettingsView.swift`, `BannerAdView.swift`) each contained an identical 5-line root view controller lookup. Extracted to a single `UIApplication` extension.
+
+**R3 — Removed ViewModel layer violation (`TexasAppViewModel.swift`)**
+- `refreshTodayFact(haptic:)` accepted a `haptic` parameter and called `Haptics.light()` + `withAnimation` — UI concerns embedded in the ViewModel. The button's action closure already called `Haptics.light()` separately, causing a double-haptic on every tap.
+- Removed the `haptic` parameter, `Haptics.light()` call, and `withAnimation` wrapper from the ViewModel. Haptics and animation are now solely the view's responsibility.
+
+**R4 — Deleted dead code (`PaperBackground.swift`)**
+- `PaperBackground` was a gradient overlay view that had been removed from all call sites in a prior update but the file itself was never deleted. Removed.
+
+#### Android — Singleton, Lifecycle & Connection Management
+
+**R5 — `FactRepository` converted to thread-safe singleton (`FactRepository.kt`)**
+- Was instantiated fresh on every access: `FactRepository(context)` in `TexasViewModel` and `DailyReminderWorker`. Each instance re-parsed the full JSON file from raw resources.
+- Converted to private constructor with `companion object getInstance(context)` using double-checked locking. Stores `applicationContext` to prevent Activity leaks. All callers updated.
+
+**R6 — `BillingManager` lifecycle management (`BillingManager.kt`, `TexasViewModel.kt`)**
+- `BillingClient` connection was opened on init but never closed — the AIDL service connection leaked when the ViewModel was destroyed.
+- Added `endConnection()` method to `BillingManager`. Added `onCleared()` override to `TexasViewModel` that calls `billingManager.endConnection()`.
+
+**R7 — `BillingClient` auto-reconnect (`BillingManager.kt`)**
+- `onBillingServiceDisconnected()` was an empty stub. If the Play Store service disconnected mid-session, all subsequent billing operations would silently fail.
+- Extracted the `BillingClientStateListener` as a named `connectionListener` field and added `billingClient.startConnection(this)` to the disconnect callback for automatic reconnection.
+
+---
+
+### Android App Icon Fix
+
+**A1 — Adaptive Icon Foreground Rescaled (Android)**
+- The adaptive icon foreground (`ic_launcher_foreground.png`) had the "TX Daily" text filling the entire 432x432 canvas. Android's adaptive icon system masks to the inner ~66% safe zone, causing the text to be almost entirely cropped — the home screen showed a blank beige square.
+- Regenerated the foreground at 432x432 with content scaled to 288x288 and centered with 72px padding, placing all text within the adaptive icon safe zone.
+- Source: iOS `iTunesArtwork@2x.png` (1024x1024).
+
+**A2 — Legacy Launcher Icons Regenerated (Android)**
+- Regenerated all density-specific legacy icons from the iOS 1024x1024 source:
+  - `mipmap-mdpi`: 48x48
+  - `mipmap-hdpi`: 72x72
+  - `mipmap-xhdpi`: 96x96
+  - `mipmap-xxhdpi`: 144x144
+  - `mipmap-xxxhdpi`: 192x192
+- Both `ic_launcher.png` and `ic_launcher_round.png` updated at each density.
+
+---
+
 ## 2026-03-18
 
 ### Code Quality — Android

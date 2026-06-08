@@ -59,12 +59,8 @@ struct OnboardingView: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var currentPage = 0
 
-    private let accentGreen = Color(red: 0.52, green: 0.65, blue: 0.23)
-    private var inkColor: Color {
-        colorScheme == .dark
-            ? .white
-            : Color(red: 0.30, green: 0.21, blue: 0.16)
-    }
+    private var accentGreen: Color { AppColors.accent }
+    private var inkColor: Color { AppColors.ink(for: colorScheme) }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -128,11 +124,7 @@ private struct PageView: View {
     let page: OnboardingPage
     let accentGreen: Color
     var isFirst: Bool = false
-    private var inkColor: Color {
-        colorScheme == .dark
-            ? .white
-            : Color(red: 0.30, green: 0.21, blue: 0.16)
-    }
+    private var inkColor: Color { AppColors.ink(for: colorScheme) }
 
     var body: some View {
         VStack(spacing: 0) {

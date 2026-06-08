@@ -2,6 +2,8 @@ package com.refuge.texasdaily.billing
 
 import android.app.Activity
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import com.android.billingclient.api.AcknowledgePurchaseParams
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
@@ -25,6 +27,7 @@ class BillingManager(context: Context) : PurchasesUpdatedListener {
     val statusMessage: StateFlow<String?> = _statusMessage
 
     private var removeAdsProduct: ProductDetails? = null
+    private var reconnectAttempts = 0
 
     private val billingClient = BillingClient.newBuilder(context)
         .setListener(this)
@@ -33,16 +36,31 @@ class BillingManager(context: Context) : PurchasesUpdatedListener {
         )
         .build()
 
-    init {
-        billingClient.startConnection(object : BillingClientStateListener {
-            override fun onBillingSetupFinished(result: BillingResult) {
-                if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-                    queryProductDetails()
-                    checkExistingPurchases()
-                }
+    private val connectionListener = object : BillingClientStateListener {
+        override fun onBillingSetupFinished(result: BillingResult) {
+            if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                reconnectAttempts = 0
+                queryProductDetails()
+                checkExistingPurchases()
             }
-            override fun onBillingServiceDisconnected() {}
-        })
+        }
+        override fun onBillingServiceDisconnected() {
+            val delay = (1000L * (1 shl reconnectAttempts.coerceAtMost(5)))
+            reconnectAttempts++
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (!billingClient.isReady) {
+                    billingClient.startConnection(this)
+                }
+            }, delay)
+        }
+    }
+
+    init {
+        billingClient.startConnection(connectionListener)
+    }
+
+    fun endConnection() {
+        billingClient.endConnection()
     }
 
     private fun queryProductDetails() {
@@ -62,6 +80,13 @@ class BillingManager(context: Context) : PurchasesUpdatedListener {
         }
     }
 
+    private fun isVerifiedPurchase(purchase: Purchase): Boolean {
+        return purchase.purchaseState == Purchase.PurchaseState.PURCHASED &&
+            purchase.products.contains(REMOVE_ADS_SKU) &&
+            !purchase.signature.isNullOrEmpty() &&
+            !purchase.originalJson.isNullOrEmpty()
+    }
+
     private fun checkExistingPurchases() {
         billingClient.queryPurchasesAsync(
             QueryPurchasesParams.newBuilder()
@@ -69,10 +94,7 @@ class BillingManager(context: Context) : PurchasesUpdatedListener {
                 .build()
         ) { result, purchases ->
             if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-                val hasRemoveAds = purchases.any { purchase ->
-                    purchase.products.contains(REMOVE_ADS_SKU) &&
-                        purchase.purchaseState == Purchase.PurchaseState.PURCHASED
-                }
+                val hasRemoveAds = purchases.any { isVerifiedPurchase(it) }
                 _adsRemoved.value = hasRemoveAds
             }
         }
@@ -96,17 +118,26 @@ class BillingManager(context: Context) : PurchasesUpdatedListener {
     }
 
     fun restorePurchases() {
-        checkExistingPurchases()
-        _statusMessage.value = "Purchases restored."
+        billingClient.queryPurchasesAsync(
+            QueryPurchasesParams.newBuilder()
+                .setProductType(BillingClient.ProductType.INAPP)
+                .build()
+        ) { result, purchases ->
+            if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                val hasRemoveAds = purchases.any { isVerifiedPurchase(it) }
+                _adsRemoved.value = hasRemoveAds
+                _statusMessage.value = if (hasRemoveAds) "Purchases restored." else "No purchases found to restore."
+            } else {
+                _statusMessage.value = "Could not check purchases. Please try again."
+            }
+        }
     }
 
     override fun onPurchasesUpdated(result: BillingResult, purchases: List<Purchase>?) {
         when (result.responseCode) {
             BillingClient.BillingResponseCode.OK -> {
                 purchases?.forEach { purchase ->
-                    if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED &&
-                        purchase.products.contains(REMOVE_ADS_SKU)
-                    ) {
+                    if (isVerifiedPurchase(purchase)) {
                         _adsRemoved.value = true
                         _statusMessage.value = "Ads removed. Thank you!"
                         if (!purchase.isAcknowledged) {

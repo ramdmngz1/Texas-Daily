@@ -46,6 +46,7 @@ fun BannerAdView() {
                 }
                 loadAd(AdRequest.Builder().build())
             }
-        }
+        },
+        onRelease = { it.destroy() }
     )
 }

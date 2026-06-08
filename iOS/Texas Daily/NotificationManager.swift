@@ -39,17 +39,8 @@ final class NotificationManager {
         }
     }
 
-    // ✅ Was private before; keep it fileprivate/private to this type, but it's ONLY called internally now.
     private func requestAuthorization() async throws -> Bool {
-        try await withCheckedThrowingContinuation { continuation in
-            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-                if let error = error {
-                    continuation.resume(throwing: error)
-                } else {
-                    continuation.resume(returning: granted)
-                }
-            }
-        }
+        try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge])
     }
 
     func openSystemNotificationSettings() {
@@ -57,19 +48,12 @@ final class NotificationManager {
         UIApplication.shared.open(url)
     }
 
-    func cancelDailyFactNotification() async {
+    func cancelDailyFactNotification() {
         let center = UNUserNotificationCenter.current()
-
-        // Remove new-style batch notifications ("dailyTexasFact_0" … "dailyTexasFact_59")
-        let pending = await center.pendingNotificationRequests()
-        let pendingIds = pending.map { $0.identifier }.filter { $0.hasPrefix("dailyTexasFact") }
-        center.removePendingNotificationRequests(withIdentifiers: pendingIds)
-
-        // Remove old-style single repeating notification ("dailyTexasFact") and any
-        // already-delivered notifications from both naming schemes from the notification center.
-        let delivered = await center.deliveredNotifications()
-        let deliveredIds = delivered.map { $0.request.identifier }.filter { $0.hasPrefix("dailyTexasFact") }
-        center.removeDeliveredNotifications(withIdentifiers: deliveredIds)
+        var ids = (0..<60).map { "dailyTexasFact_\($0)" }
+        ids.append("dailyTexasFact")
+        center.removePendingNotificationRequests(withIdentifiers: ids)
+        center.removeDeliveredNotifications(withIdentifiers: ids)
     }
 
     func scheduleDailyFactNotification(at time: DateComponents) async {
@@ -77,16 +61,16 @@ final class NotificationManager {
 
         guard await ensureAuthorization() else { return }
 
-        // Remove all previously scheduled daily fact notifications
-        await cancelDailyFactNotification()
+        cancelDailyFactNotification()
+
+        let allFacts = FactStore.shared.facts
+        guard !allFacts.isEmpty else { return }
+        let shuffled = allFacts.shuffled()
 
         let calendar = Calendar.current
         let now = Date()
-        var lastFactID: Int? = nil
         var scheduledCount = 0
 
-        // Schedule up to 60 one-time notifications, one per day, each with a unique fact.
-        // iOS caps pending local notifications at 64; 60 leaves headroom for other app notifications.
         for dayOffset in 0..<60 {
             guard let baseDate = calendar.date(byAdding: .day, value: dayOffset, to: now) else { continue }
 
@@ -95,11 +79,9 @@ final class NotificationManager {
             components.minute = time.minute
             components.second = 0
 
-            // Skip fire times that have already passed today
             guard let fireDate = calendar.date(from: components), fireDate > now else { continue }
 
-            guard let fact = FactStore.shared.randomFact(excluding: lastFactID) else { continue }
-            lastFactID = fact.id
+            let fact = shuffled[scheduledCount % shuffled.count]
 
             let content = UNMutableNotificationContent()
             content.title = "Texas Daily Fact"

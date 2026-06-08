@@ -1,0 +1,82 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Platform to release'
+        required: true
+        type: choice
+        options:
+          - ios
+          - android
+          - both
+      version:
+        description: 'Version number (e.g., 1.3.0)'
+        required: true
+        type: string
+      release_notes:
+        description: 'Release notes'
+        required: true
+        type: string
+
+jobs:
+  create-release:
+    name: Tag & Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump iOS version
+        if: inputs.platform == 'ios' || inputs.platform == 'both'
+        run: |
+          sed -i '' "s/MARKETING_VERSION = .*/MARKETING_VERSION = ${{ inputs.version }};/" "iOS/Texas Daily.xcodeproj/project.pbxproj"
+          git add "iOS/Texas Daily.xcodeproj/project.pbxproj"
+
+      - name: Bump Android version
+        if: inputs.platform == 'android' || inputs.platform == 'both'
+        run: |
+          CURRENT_CODE=$(grep -oP 'versionCode = \K\d+' Android/Project/app/build.gradle.kts)
+          NEW_CODE=$((CURRENT_CODE + 1))
+          sed -i "s/versionCode = $CURRENT_CODE/versionCode = $NEW_CODE/" Android/Project/app/build.gradle.kts
+          sed -i "s/versionName = .*/versionName = \"${{ inputs.version }}\"/" Android/Project/app/build.gradle.kts
+          git add Android/Project/app/build.gradle.kts
+
+      - name: Commit version bump
+        run: |
+          git commit -m "Release v${{ inputs.version }} (${{ inputs.platform }})"
+
+      - name: Create iOS tag
+        if: inputs.platform == 'ios' || inputs.platform == 'both'
+        run: |
+          git tag -a "ios-v${{ inputs.version }}" -m "${{ inputs.release_notes }}"
+
+      - name: Create Android tag
+        if: inputs.platform == 'android' || inputs.platform == 'both'
+        run: |
+          git tag -a "android-v${{ inputs.version }}" -m "${{ inputs.release_notes }}"
+
+      - name: Push
+        run: git push origin main --follow-tags
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "v${{ inputs.version }}"
+          name: "Texas Daily v${{ inputs.version }}"
+          body: |
+            ## Texas Daily v${{ inputs.version }}
+
+            **Platform:** ${{ inputs.platform }}
+
+            ### Release Notes
+            ${{ inputs.release_notes }}
+          draft: false
+          prerelease: false

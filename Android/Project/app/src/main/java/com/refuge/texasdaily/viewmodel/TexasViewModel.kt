@@ -1,40 +1,27 @@
 package com.refuge.texasdaily.viewmodel
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringSetPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.refuge.texasdaily.billing.BillingManager
 import com.refuge.texasdaily.data.FactRepository
+import com.refuge.texasdaily.data.PreferenceKeys
 import com.refuge.texasdaily.data.TexasFact
+import com.refuge.texasdaily.data.dataStore
 import com.refuge.texasdaily.notifications.DailyReminderWorker
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "texas_daily_prefs")
-
-private val KEY_CATEGORIES = stringSetPreferencesKey("tx_selectedCategories")
-private val KEY_REMINDER_ENABLED = booleanPreferencesKey("reminder_enabled")
-private val KEY_REMINDER_HOUR = intPreferencesKey("reminder_hour")
-private val KEY_REMINDER_MINUTE = intPreferencesKey("reminder_minute")
-private val KEY_DARK_MODE = booleanPreferencesKey("dark_mode")
-private val KEY_ONBOARDING_DONE = booleanPreferencesKey("onboarding_done")
-
 class TexasViewModel(
     private val context: Context,
     val billingManager: BillingManager
 ) : ViewModel() {
 
-    private val repository = FactRepository(context)
+    private val repository = FactRepository.getInstance(context)
 
     private val _currentFact = MutableStateFlow<TexasFact?>(null)
     val currentFact: StateFlow<TexasFact?> = _currentFact
@@ -62,20 +49,33 @@ class TexasViewModel(
 
     init {
         _allCategories.value = repository.getCategories()
+        loadNewFact()
         viewModelScope.launch {
             val prefs = context.dataStore.data.first()
-            _selectedCategories.value = prefs[KEY_CATEGORIES] ?: emptySet()
-            _reminderEnabled.value = prefs[KEY_REMINDER_ENABLED] ?: false
-            _reminderHour.value = prefs[KEY_REMINDER_HOUR] ?: 9
-            _reminderMinute.value = prefs[KEY_REMINDER_MINUTE] ?: 0
-            _isDarkMode.value = prefs[KEY_DARK_MODE] ?: false
-            _onboardingDone.value = prefs[KEY_ONBOARDING_DONE] ?: false
-            loadNewFact()
+            _selectedCategories.value = prefs[PreferenceKeys.CATEGORIES] ?: emptySet()
+            _reminderEnabled.value = prefs[PreferenceKeys.REMINDER_ENABLED] ?: false
+            _reminderHour.value = prefs[PreferenceKeys.REMINDER_HOUR] ?: 9
+            _reminderMinute.value = prefs[PreferenceKeys.REMINDER_MINUTE] ?: 0
+            _isDarkMode.value = prefs[PreferenceKeys.DARK_MODE] ?: false
+            _onboardingDone.value = prefs[PreferenceKeys.ONBOARDING_DONE] ?: false
+            if (_selectedCategories.value.isNotEmpty()) {
+                loadNewFact()
+            }
         }
     }
 
     fun loadNewFact() {
-        _currentFact.value = repository.randomFact(_selectedCategories.value)
+        val currentId = _currentFact.value?.id
+        val categories = _selectedCategories.value
+
+        var next: TexasFact? = null
+        if (categories.isNotEmpty()) {
+            next = repository.randomFact(categories, excludingId = currentId)
+        }
+        if (next == null) {
+            next = repository.randomFact(emptySet(), excludingId = currentId)
+        }
+        _currentFact.value = next
     }
 
     fun toggleCategory(category: String) {
@@ -83,28 +83,30 @@ class TexasViewModel(
         if (category in updated) updated.remove(category) else updated.add(category)
         _selectedCategories.value = updated
         viewModelScope.launch {
-            context.dataStore.edit { it[KEY_CATEGORIES] = updated }
+            context.dataStore.edit { it[PreferenceKeys.CATEGORIES] = updated }
         }
+        loadNewFact()
     }
 
     fun clearCategoryFilter() {
         _selectedCategories.value = emptySet()
         viewModelScope.launch {
-            context.dataStore.edit { it[KEY_CATEGORIES] = emptySet() }
+            context.dataStore.edit { it[PreferenceKeys.CATEGORIES] = emptySet() }
         }
+        loadNewFact()
     }
 
     fun completeOnboarding() {
         _onboardingDone.value = true
         viewModelScope.launch {
-            context.dataStore.edit { it[KEY_ONBOARDING_DONE] = true }
+            context.dataStore.edit { it[PreferenceKeys.ONBOARDING_DONE] = true }
         }
     }
 
     fun setDarkMode(enabled: Boolean) {
         _isDarkMode.value = enabled
         viewModelScope.launch {
-            context.dataStore.edit { it[KEY_DARK_MODE] = enabled }
+            context.dataStore.edit { it[PreferenceKeys.DARK_MODE] = enabled }
         }
     }
 
@@ -114,9 +116,9 @@ class TexasViewModel(
         _reminderMinute.value = minute
         viewModelScope.launch {
             context.dataStore.edit {
-                it[KEY_REMINDER_ENABLED] = enabled
-                it[KEY_REMINDER_HOUR] = hour
-                it[KEY_REMINDER_MINUTE] = minute
+                it[PreferenceKeys.REMINDER_ENABLED] = enabled
+                it[PreferenceKeys.REMINDER_HOUR] = hour
+                it[PreferenceKeys.REMINDER_MINUTE] = minute
             }
         }
         if (enabled) {
@@ -124,6 +126,11 @@ class TexasViewModel(
         } else {
             DailyReminderWorker.cancel(context)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        billingManager.endConnection()
     }
 
     class Factory(private val context: Context) : ViewModelProvider.Factory {

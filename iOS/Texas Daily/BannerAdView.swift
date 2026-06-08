@@ -14,14 +14,9 @@ import UIKit
 
 struct BannerAdView: UIViewRepresentable {
 
-    /// Use Google's test unit on simulator/debug for reliable ad loading.
     private var adUnitID: String {
 #if DEBUG
-#if targetEnvironment(simulator)
         return "ca-app-pub-3940256099942544/2435281174"
-#else
-        return "ca-app-pub-2130345513930124/4850016311"
-#endif
 #else
         return "ca-app-pub-2130345513930124/4850016311"
 #endif
@@ -47,11 +42,7 @@ struct BannerAdView: UIViewRepresentable {
 
     final class Coordinator: NSObject, BannerViewDelegate {
         var rootViewController: UIViewController? {
-            UIApplication.shared.connectedScenes
-                .compactMap { $0 as? UIWindowScene }
-                .flatMap { $0.windows }
-                .first(where: { $0.isKeyWindow })?
-                .rootViewController
+            UIApplication.shared.keyWindowRootViewController
         }
 
         func bannerViewDidReceiveAd(_ bannerView: BannerView) {

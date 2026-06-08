@@ -5,22 +5,13 @@ import SwiftUI
 
 struct RootView: View {
     @EnvironmentObject var viewModel: TexasAppViewModel
+    @EnvironmentObject var storeKit: StoreKitManager
     @Environment(\.colorScheme) private var colorScheme
 
     @State private var showingSettings = false
 
-    // Match TodayFactView background so everything feels cohesive
-    private var backgroundColor: Color {
-        if colorScheme == .dark {
-            return Color(red: 0.07, green: 0.08, blue: 0.10)   // deep charcoal
-        } else {
-            return Color(red: 0.961, green: 0.961, blue: 0.863) // app icon tan #F5F5DC
-        }
-    }
-
-    private var accentGreen: Color {
-        Color(red: 0.52, green: 0.65, blue: 0.23)
-    }
+    private var backgroundColor: Color { AppColors.background(for: colorScheme) }
+    private var accentGreen: Color { AppColors.accent }
 
     var body: some View {
         if !viewModel.onboardingDone {
@@ -44,7 +35,7 @@ struct RootView: View {
                     .environmentObject(viewModel)
 
                 // Show banner when ads are ready and not removed.
-                if viewModel.adsSDKReady && !viewModel.adsRemoved {
+                if viewModel.adsSDKReady && !storeKit.adsRemoved {
                     BannerAdView()
                         .frame(height: 50)
                         .background(backgroundColor)
@@ -72,6 +63,7 @@ struct RootView: View {
         .fullScreenCover(isPresented: $showingSettings) {
             SettingsView()
                 .environmentObject(viewModel)
+                .environmentObject(storeKit)
         }
     }
 }

@@ -1,107 +1,72 @@
-//
-//  TexasAppViewModel.swift
-//  Texas Daily
-//
-//  Created by Ramon Dominguez on 12/03/25.
-//
-
 import Foundation
-import Combine
-import StoreKit
-import SwiftUI
 
 @MainActor
 final class TexasAppViewModel: ObservableObject {
 
-    // MARK: - Published state used by the UI
+    // MARK: - Published state
+
     @Published var todayFact: TexasFact? = nil
     @Published var selectedCategories: Set<String> = []
     @Published var notificationTime: Date
-    @Published var adsRemoved: Bool
-    @Published var isVerifyingEntitlements: Bool = true
     @Published var adsSDKReady: Bool = false
     @Published var onboardingDone: Bool = false
 
-    // Computed once at init — facts are immutable at runtime
     let availableCategories: [String]
 
-    // Purchase / restore status shown in SettingsView
-    @Published var purchaseStatusMessage: String? = nil
-
-    // MARK: - Storage keys
-    private let selectedCategoriesKey = "tx_selectedCategories"
-    private let reminderHourKey = "tx_reminder_hour"
-    private let reminderMinuteKey = "tx_reminder_minute"
-    private let dailyReminderEnabledKey = "tx_dailyReminderEnabled"
-    private let onboardingDoneKey = "tx_onboarding_done"
-    private let adsRemovedCachedKey = "tx_ads_removed_cached"
-
-    // ✅ Put your real StoreKit product id here
-    private let removeAdsProductId = "com.refuge.texasdaily.removead"
-
-    // StoreKit listener task
-    private var transactionUpdatesTask: Task<Void, Never>?
+    private var notificationDebounceTask: Task<Void, Never>?
 
     // MARK: - Init
-    init() {
-        // Use last known entitlement state for faster first render;
-        // refreshEntitlements() remains the source of truth.
-        self.adsRemoved = UserDefaults.standard.bool(forKey: adsRemovedCachedKey)
 
-        // Cache sorted unique categories once — facts never change at runtime
+    init() {
         self.availableCategories = Array(Set(FactStore.shared.facts.map { $0.category })).sorted()
 
-        // Load persisted category selection, filtering out any stale categories
-        // that no longer exist in the current fact set (e.g. after a content update)
-        if let arr = UserDefaults.standard.array(forKey: selectedCategoriesKey) as? [String] {
+        if let arr = UserDefaults.standard.array(forKey: PreferenceKeys.selectedCategories) as? [String] {
             let validCategories = Set(self.availableCategories)
             self.selectedCategories = Set(arr).intersection(validCategories)
         } else {
             self.selectedCategories = []
         }
 
-        // Load notification time (default 9:00 AM)
         let hour: Int
         let minute: Int
-
-        if UserDefaults.standard.object(forKey: reminderHourKey) != nil {
-            hour = UserDefaults.standard.integer(forKey: reminderHourKey)
-            minute = UserDefaults.standard.integer(forKey: reminderMinuteKey)
+        if UserDefaults.standard.object(forKey: PreferenceKeys.reminderHour) != nil {
+            hour = UserDefaults.standard.integer(forKey: PreferenceKeys.reminderHour)
+            minute = UserDefaults.standard.integer(forKey: PreferenceKeys.reminderMinute)
         } else {
             hour = 9
             minute = 0
         }
-
         var comps = DateComponents()
         comps.hour = hour
         comps.minute = minute
         self.notificationTime = Calendar.current.date(from: comps) ?? Date()
 
-        // Load onboarding state
-        self.onboardingDone = UserDefaults.standard.bool(forKey: onboardingDoneKey)
+        self.onboardingDone = UserDefaults.standard.bool(forKey: PreferenceKeys.onboardingDone)
 
-        // Seed the first fact
-        refreshTodayFact(haptic: false)
-
-        // Refresh entitlements on launch (important for restore)
-        Task { await refreshEntitlements() }
+        refreshTodayFact()
     }
 
     // MARK: - Onboarding
+
     func completeOnboarding() {
         onboardingDone = true
-        UserDefaults.standard.set(true, forKey: onboardingDoneKey)
+        UserDefaults.standard.set(true, forKey: PreferenceKeys.onboardingDone)
     }
 
     // MARK: - Facts
-    func refreshTodayFact(haptic: Bool = true) {
-        if haptic { Haptics.light() }
+
+    func refreshTodayFact() {
         let currentID = todayFact?.id
-        let next = FactStore.shared.randomFact(from: selectedCategories, excluding: currentID)
-                ?? FactStore.shared.randomFact(excluding: currentID)
-        withAnimation(.easeInOut(duration: 0.25)) {
-            todayFact = next
+
+        var next: TexasFact?
+        if !selectedCategories.isEmpty {
+            next = FactStore.shared.randomFact(from: selectedCategories, excluding: currentID)
         }
+        if next == nil {
+            next = FactStore.shared.randomFact(excluding: currentID)
+        }
+
+        todayFact = next
     }
 
     // MARK: - Category Selection
@@ -113,38 +78,39 @@ final class TexasAppViewModel: ObservableObject {
             selectedCategories.insert(category)
         }
         saveSelectedCategories()
-        refreshTodayFact(haptic: false)
+        refreshTodayFact()
     }
 
     func clearCategories() {
         selectedCategories = []
         saveSelectedCategories()
-        refreshTodayFact(haptic: false)
+        refreshTodayFact()
     }
 
     private func saveSelectedCategories() {
-        UserDefaults.standard.set(Array(selectedCategories), forKey: selectedCategoriesKey)
+        UserDefaults.standard.set(Array(selectedCategories), forKey: PreferenceKeys.selectedCategories)
     }
 
     // MARK: - Notifications
-    /// Persists the selected reminder time.
-    /// If reminders are enabled, this also re-schedules immediately.
+
     func saveNotificationTime() {
         let comps = Calendar.current.dateComponents([.hour, .minute], from: notificationTime)
-        UserDefaults.standard.set(comps.hour ?? 9, forKey: reminderHourKey)
-        UserDefaults.standard.set(comps.minute ?? 0, forKey: reminderMinuteKey)
+        UserDefaults.standard.set(comps.hour ?? 9, forKey: PreferenceKeys.reminderHour)
+        UserDefaults.standard.set(comps.minute ?? 0, forKey: PreferenceKeys.reminderMinute)
 
-        let enabled = UserDefaults.standard.object(forKey: dailyReminderEnabledKey) as? Bool ?? false
+        let enabled = UserDefaults.standard.object(forKey: PreferenceKeys.dailyReminderEnabled) as? Bool ?? false
         guard enabled else { return }
 
-        Task { await scheduleDailyReminderIfEnabled() }
+        notificationDebounceTask?.cancel()
+        notificationDebounceTask = Task {
+            try? await Task.sleep(nanoseconds: 800_000_000)
+            guard !Task.isCancelled else { return }
+            await scheduleDailyReminderIfEnabled()
+        }
     }
 
-    /// Enables/disables daily reminders immediately.
-    /// When enabled, the currently selected time is persisted and scheduled.
     func setDailyReminderEnabled(_ enabled: Bool) {
-        UserDefaults.standard.set(enabled, forKey: dailyReminderEnabledKey)
-
+        UserDefaults.standard.set(enabled, forKey: PreferenceKeys.dailyReminderEnabled)
         if enabled {
             saveNotificationTime()
         } else {
@@ -152,108 +118,16 @@ final class TexasAppViewModel: ObservableObject {
         }
     }
 
-    /// Called on app launch (TexasDailyApp.swift) and after saving time.
     func scheduleDailyReminderIfEnabled() async {
-        let enabled = UserDefaults.standard.object(forKey: dailyReminderEnabledKey) as? Bool ?? false
+        let enabled = UserDefaults.standard.object(forKey: PreferenceKeys.dailyReminderEnabled) as? Bool ?? false
         let center = NotificationManager.shared
 
         if !enabled {
-            await center.cancelDailyFactNotification()
+            center.cancelDailyFactNotification()
             return
         }
 
         let comps = Calendar.current.dateComponents([.hour, .minute], from: notificationTime)
         await center.scheduleDailyFactNotification(at: comps)
-    }
-
-    // MARK: - StoreKit (Remove Ads)
-    func buyRemoveAds() async {
-        purchaseStatusMessage = nil
-        do {
-            let products = try await Product.products(for: [removeAdsProductId])
-            guard let product = products.first else {
-                purchaseStatusMessage = "Remove Ads product not found."
-                return
-            }
-
-            let result = try await product.purchase()
-
-            switch result {
-            case .success(let verification):
-                let transaction = try checkVerified(verification)
-                await transaction.finish()
-                await refreshEntitlements()
-            case .userCancelled:
-                purchaseStatusMessage = "Purchase cancelled."
-            case .pending:
-                purchaseStatusMessage = "Purchase pending — check back soon."
-            @unknown default:
-                purchaseStatusMessage = "Unknown purchase result."
-            }
-        } catch {
-            purchaseStatusMessage = "Purchase error: \(error.localizedDescription)"
-        }
-    }
-
-    func restorePurchases() async {
-        purchaseStatusMessage = nil
-        await refreshEntitlements()
-        if adsRemoved { return }
-
-        do {
-            try await AppStore.sync()
-            await refreshEntitlements()
-            if !adsRemoved {
-                purchaseStatusMessage = "No purchases found to restore."
-            }
-        } catch {
-            purchaseStatusMessage = "Restore error: \(error.localizedDescription)"
-        }
-    }
-
-    /// ✅ Fixed: no Task.detached, so we can safely call @MainActor methods.
-    func startStoreKitListener() {
-        if transactionUpdatesTask != nil { return }
-
-        transactionUpdatesTask = Task { [weak self] in
-            guard let self else { return }
-
-            for await update in Transaction.updates {
-                do {
-                    _ = try self.checkVerified(update)
-                    await self.refreshEntitlements()
-                } catch {
-                    // Ignore unverified transactions
-                }
-            }
-        }
-    }
-
-    private func refreshEntitlements() async {
-        var hasRemoveAds = false
-
-        for await result in Transaction.currentEntitlements {
-            guard let transaction = try? checkVerified(result) else { continue }
-            if transaction.productID == removeAdsProductId {
-                hasRemoveAds = true
-            }
-        }
-
-        adsRemoved = hasRemoveAds
-        UserDefaults.standard.set(hasRemoveAds, forKey: adsRemovedCachedKey)
-        isVerifyingEntitlements = false
-    }
-
-    private func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {
-        switch result {
-        case .unverified(_, let error):
-            throw error
-        case .verified(let signed):
-            return signed
-        }
-    }
-
-    deinit {
-        transactionUpdatesTask?.cancel()
     }
 }

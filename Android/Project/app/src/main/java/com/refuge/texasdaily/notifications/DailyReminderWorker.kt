@@ -38,7 +38,7 @@ class DailyReminderWorker(
         }
         notificationManager.createNotificationChannel(channel)
 
-        val fact = FactRepository(context).randomFact(emptySet())
+        val fact = FactRepository.getInstance(context).randomFact(emptySet())
         val notificationBody = fact?.fact ?: context.getString(R.string.notification_body)
 
         val notification = NotificationCompat.Builder(context, channelId)

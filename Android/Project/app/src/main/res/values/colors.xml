@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Texas Daily accent green used as adaptive icon background -->
-    <color name="ic_launcher_background">#85A63D</color>
+    <!-- Matches the iOS app icon background. -->
+    <color name="ic_launcher_background">#F5F5DC</color>
     <!-- Splash screen background matches app icon tan -->
     <color name="splash_background">#F5F5DC</color>
 </resources>

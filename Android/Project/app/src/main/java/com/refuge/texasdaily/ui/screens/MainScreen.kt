@@ -1,6 +1,8 @@
 package com.refuge.texasdaily.ui.screens
 
 import android.content.Intent
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -29,6 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +46,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.refuge.texasdaily.ui.components.BannerAdView
 import com.refuge.texasdaily.ui.components.CategoryFilterSheet
+import com.refuge.texasdaily.ui.components.EmptyState
 import com.refuge.texasdaily.ui.theme.AccentGreen
 import com.refuge.texasdaily.ui.theme.LightChip
 import com.refuge.texasdaily.viewmodel.TexasViewModel
@@ -117,87 +122,107 @@ fun MainScreen(
                 }
             }
 
-            // Fact card
+            // Fact content with crossfade transition
+            val scrollState = rememberScrollState()
+
+            LaunchedEffect(fact?.id) {
+                scrollState.animateScrollTo(0)
+            }
+
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(scrollState)
                     .padding(horizontal = 20.dp, vertical = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                fact?.let { currentFact ->
-                    // Category chip
-                    Surface(
-                        shape = RoundedCornerShape(50),
-                        color = LightChip,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    ) {
-                        Text(
-                            currentFact.category,
-                            style = MaterialTheme.typography.labelMedium,
-                            color = AccentGreen,
-                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)
-                        )
-                    }
+                Crossfade(
+                    targetState = fact,
+                    animationSpec = tween(300),
+                    label = "fact-crossfade"
+                ) { currentFact ->
+                    if (currentFact != null) {
+                        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                            // Category chip
+                            Surface(
+                                shape = RoundedCornerShape(50),
+                                color = LightChip,
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            ) {
+                                Text(
+                                    currentFact.category,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = AccentGreen,
+                                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)
+                                )
+                            }
 
-                    // Main fact card
-                    Card(
-                        shape = RoundedCornerShape(20.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            currentFact.fact,
-                            style = MaterialTheme.typography.headlineMedium,
-                            textAlign = TextAlign.Start,
-                            modifier = Modifier.padding(24.dp)
-                        )
-                    }
+                            // Main fact card
+                            Card(
+                                shape = RoundedCornerShape(20.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surface
+                                ),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    currentFact.fact,
+                                    style = MaterialTheme.typography.headlineMedium,
+                                    textAlign = TextAlign.Start,
+                                    modifier = Modifier.padding(24.dp)
+                                )
+                            }
 
-                    // Background info card
-                    Card(
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Column(Modifier.padding(20.dp)) {
-                            Text(
-                                "Background",
-                                style = MaterialTheme.typography.labelLarge,
-                                color = AccentGreen
-                            )
-                            Spacer(Modifier.height(8.dp))
-                            Text(
-                                currentFact.background,
-                                style = MaterialTheme.typography.bodyLarge
-                            )
+                            // Background info card
+                            Card(
+                                shape = RoundedCornerShape(16.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surface
+                                ),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Column(Modifier.padding(20.dp)) {
+                                    Text(
+                                        "Background",
+                                        style = MaterialTheme.typography.labelLarge,
+                                        color = AccentGreen
+                                    )
+                                    Spacer(Modifier.height(8.dp))
+                                    Text(
+                                        currentFact.background,
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                }
+                            }
+
+                            // Source & date
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    "Source: ${currentFact.source}",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                                    textAlign = TextAlign.Center
+                                )
+                                currentFact.date?.let { date ->
+                                    Text(
+                                        date,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f)
+                                    )
+                                }
+                            }
                         }
-                    }
-
-                    // Source & date
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            "Source: ${currentFact.source}",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
-                            textAlign = TextAlign.Center
+                    } else {
+                        EmptyState(
+                            icon = Icons.Default.Star,
+                            title = "Loading a Texas fact…",
+                            subtitle = "Tap below to discover something new"
                         )
-                        currentFact.date?.let { date ->
-                            Text(
-                                date,
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f)
-                            )
-                        }
                     }
                 }
 

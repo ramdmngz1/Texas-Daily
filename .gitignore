@@ -43,11 +43,22 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+fastlane/builds/
+fastlane/README.md
 
 # Environment & secrets
 .env
 .env.*
 secrets.plist
+
+# Android
+local.properties
+*.jks
+*.keystore
+.gradle/
+.idea/
+*.apk
+*.aab
 
 # Archives
 *.xcarchive

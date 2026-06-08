@@ -23,8 +23,6 @@ import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -49,6 +47,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.refuge.texasdaily.ui.components.AppCard
+import com.refuge.texasdaily.ui.components.StatusBanner
 import com.refuge.texasdaily.ui.theme.AccentGreen
 import com.refuge.texasdaily.viewmodel.TexasViewModel
 import java.util.Calendar
@@ -72,8 +72,14 @@ fun SettingsScreen(
         initialMinute = reminderMinute
     )
 
+    var hasUserInteracted by remember { mutableStateOf(false) }
+
     LaunchedEffect(reminderEnabled) { localReminderEnabled = reminderEnabled }
-    LaunchedEffect(localReminderEnabled, timePickerState.hour, timePickerState.minute) {
+    LaunchedEffect(timePickerState.hour, timePickerState.minute) {
+        if (!hasUserInteracted) {
+            hasUserInteracted = true
+            return@LaunchedEffect
+        }
         if (localReminderEnabled) {
             viewModel.saveReminder(true, timePickerState.hour, timePickerState.minute)
         }
@@ -111,7 +117,7 @@ fun SettingsScreen(
             Spacer(Modifier.height(4.dp))
 
             // Appearance section
-            SettingsCard {
+            AppCard {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -139,7 +145,7 @@ fun SettingsScreen(
             }
 
             // Daily reminder section
-            SettingsCard {
+            AppCard {
                 Column {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -194,7 +200,7 @@ fun SettingsScreen(
 
             // Support section
             if (!adsRemoved) {
-                SettingsCard {
+                AppCard {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         Text("Support Us", style = MaterialTheme.typography.labelLarge)
                         HorizontalDivider()
@@ -216,23 +222,17 @@ fun SettingsScreen(
                         ) {
                             Text("Restore Purchases")
                         }
-                        billingStatus?.let { msg ->
-                            Text(
-                                msg,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = AccentGreen
-                            )
-                            LaunchedEffect(msg) {
-                                kotlinx.coroutines.delay(3000)
-                                viewModel.billingManager.clearStatusMessage()
-                            }
-                        }
+                        StatusBanner(
+                            message = billingStatus,
+                            autoDismissMs = 3000,
+                            onDismiss = { viewModel.billingManager.clearStatusMessage() }
+                        )
                     }
                 }
             }
 
             // About section
-            SettingsCard {
+            AppCard {
                 Column {
                     Text("About", style = MaterialTheme.typography.labelLarge)
                     Spacer(Modifier.height(8.dp))
@@ -245,20 +245,6 @@ fun SettingsScreen(
             }
 
             Spacer(Modifier.height(32.dp))
-        }
-    }
-}
-
-@Composable
-private fun SettingsCard(content: @Composable () -> Unit) {
-    Card(
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(Modifier.padding(20.dp)) {
-            content()
         }
     }
 }

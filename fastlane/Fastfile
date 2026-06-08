@@ -1,0 +1,78 @@
+default_platform(:ios)
+
+platform :ios do
+  before_all do
+    setup_ci if ENV['CI']
+  end
+
+  desc "Run tests"
+  lane :test do
+    run_tests(
+      project: "Texas Daily.xcodeproj",
+      scheme: "Texas Daily",
+      device: "iPhone 16",
+      code_coverage: true,
+      output_directory: "./fastlane/test_output"
+    )
+  end
+
+  desc "Build and upload to TestFlight"
+  lane :beta do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+      key_content: ENV["APP_STORE_CONNECT_API_KEY"],
+      is_key_content_base64: true
+    )
+
+    increment_build_number(
+      build_number: ENV["GITHUB_RUN_NUMBER"] || (latest_testflight_build_number(api_key: api_key) + 1).to_s,
+      xcodeproj: "Texas Daily.xcodeproj"
+    )
+
+    build_app(
+      project: "Texas Daily.xcodeproj",
+      scheme: "Texas Daily",
+      export_method: "app-store",
+      output_directory: "./fastlane/builds",
+      output_name: "TexasDaily.ipa"
+    )
+
+    upload_to_testflight(
+      api_key: api_key,
+      skip_waiting_for_build_processing: true,
+      distribute_external: false
+    )
+  end
+
+  desc "Build and submit to App Store Review"
+  lane :release do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+      key_content: ENV["APP_STORE_CONNECT_API_KEY"],
+      is_key_content_base64: true
+    )
+
+    increment_build_number(
+      build_number: (latest_testflight_build_number(api_key: api_key) + 1).to_s,
+      xcodeproj: "Texas Daily.xcodeproj"
+    )
+
+    build_app(
+      project: "Texas Daily.xcodeproj",
+      scheme: "Texas Daily",
+      export_method: "app-store",
+      output_directory: "./fastlane/builds",
+      output_name: "TexasDaily.ipa"
+    )
+
+    upload_to_app_store(
+      api_key: api_key,
+      submit_for_review: true,
+      automatic_release: true,
+      precheck_include_in_app_purchases: false,
+      force: true
+    )
+  end
+end

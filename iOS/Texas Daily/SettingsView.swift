@@ -22,6 +22,7 @@ import UIKit
 
 struct SettingsView: View {
     @EnvironmentObject var viewModel: TexasAppViewModel
+    @EnvironmentObject var storeKit: StoreKitManager
 
     @AppStorage("themeMode") private var themeModeRaw: String = ThemeMode.light.rawValue
     @AppStorage("tx_dailyReminderEnabled") private var dailyReminderEnabled: Bool = false
@@ -45,29 +46,12 @@ struct SettingsView: View {
         (themeMode == .dark) ? .dark : .light
     }
 
-    // MARK: - Palette (match TodayFactView)
+    // MARK: - Palette
 
-    private var backgroundColor: Color {
-        effectiveColorScheme == .dark
-        ? Color(red: 0.07, green: 0.08, blue: 0.10)   // deep charcoal
-        : Color(red: 0.961, green: 0.961, blue: 0.863) // app icon tan #F5F5DC
-    }
-
-    private var inkColor: Color {
-        effectiveColorScheme == .dark
-        ? .white
-        : Color(red: 0.30, green: 0.21, blue: 0.16)   // pecan brown
-    }
-
-    private var cardColor: Color {
-        effectiveColorScheme == .dark
-        ? Color(red: 0.16, green: 0.18, blue: 0.20)
-        : Color.white.opacity(0.98)
-    }
-
-    private var accentGreen: Color {
-        Color(red: 0.52, green: 0.65, blue: 0.23)
-    }
+    private var backgroundColor: Color { AppColors.background(for: effectiveColorScheme) }
+    private var inkColor: Color { AppColors.ink(for: effectiveColorScheme) }
+    private var cardColor: Color { AppColors.card(for: effectiveColorScheme) }
+    private var accentGreen: Color { AppColors.accent }
 
     private var privacyOptionsRequired: Bool {
         ConsentInformation.shared.privacyOptionsRequirementStatus == .required
@@ -196,11 +180,7 @@ struct SettingsView: View {
             }
         }
         .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .fill(cardColor)
-        )
-        .shadow(color: Color.black.opacity(0.06), radius: 14, x: 0, y: 8)
+        .appCard(fill: cardColor)
     }
 
     // MARK: - Appearance Card
@@ -234,11 +214,7 @@ struct SettingsView: View {
             .padding(.top, 2)
         }
         .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .fill(cardColor)
-        )
-        .shadow(color: Color.black.opacity(0.06), radius: 14, x: 0, y: 8)
+        .appCard(fill: cardColor)
     }
 
     // MARK: - Support / Remove Ads
@@ -249,7 +225,7 @@ struct SettingsView: View {
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(inkColor)
 
-            if viewModel.adsRemoved {
+            if storeKit.adsRemoved {
                 HStack(alignment: .center, spacing: 10) {
                     Image(systemName: "checkmark.seal.fill")
                         .foregroundColor(accentGreen)
@@ -269,7 +245,7 @@ struct SettingsView: View {
                     Haptics.medium()
                     isAttemptingPurchase = true
                     Task {
-                        await viewModel.buyRemoveAds()
+                        await storeKit.buy()
                         isAttemptingPurchase = false
                     }
                 } label: {
@@ -301,7 +277,7 @@ struct SettingsView: View {
                 Haptics.light()
                 isAttemptingRestore = true
                 Task {
-                    await viewModel.restorePurchases()
+                    await storeKit.restore()
                     isAttemptingRestore = false
                 }
             } label: {
@@ -369,15 +345,12 @@ struct SettingsView: View {
                     .foregroundColor(inkColor.opacity(0.6))
             }
 
-            if let message = viewModel.purchaseStatusMessage {
-                Text(message)
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(message.contains("error") || message.contains("not found")
-                                     ? .red.opacity(0.85)
-                                     : inkColor.opacity(0.7))
-                    .padding(.top, 2)
-                    .transition(.opacity)
-            }
+            StatusBanner(
+                message: storeKit.statusMessage,
+                isError: storeKit.statusMessage?.contains("error") == true
+                    || storeKit.statusMessage?.contains("not found") == true,
+                onDismiss: { storeKit.statusMessage = nil }
+            )
 
             if let privacyStatusMessage {
                 Text(privacyStatusMessage)
@@ -388,12 +361,8 @@ struct SettingsView: View {
             }
         }
         .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .fill(cardColor)
-        )
-        .shadow(color: Color.black.opacity(0.06), radius: 14, x: 0, y: 8)
-        .animation(.easeInOut(duration: 0.2), value: viewModel.purchaseStatusMessage)
+        .appCard(fill: cardColor)
+        .animation(.easeInOut(duration: 0.2), value: storeKit.statusMessage)
         .animation(.easeInOut(duration: 0.2), value: privacyStatusMessage)
     }
 
@@ -450,10 +419,6 @@ struct SettingsView: View {
     }
 
     private var rootViewController: UIViewController? {
-        UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .flatMap { $0.windows }
-            .first(where: { $0.isKeyWindow })?
-            .rootViewController
+        UIApplication.shared.keyWindowRootViewController
     }
 }
